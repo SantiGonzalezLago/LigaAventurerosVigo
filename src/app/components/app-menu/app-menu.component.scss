@@ -1,0 +1,129 @@
+.menu-header {
+  padding: 24px 16px 12px;
+  text-align: center;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: initial !important;
+}
+
+.menu-logo {
+  display: block;
+  width: 72px;
+  height: auto;
+  margin: 0 auto 10px;
+}
+
+.app-title {
+  font-size: 28px !important;
+  margin: 0 0 0 0 !important;
+  font-weight: normal !important;
+}
+
+.main-title {
+  margin-top: 0 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.app-version {
+  font-size: 12px !important;
+  margin: 0 !important;
+}
+
+ion-list {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+h2 {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.menu-footer {
+  text-align: center;
+  padding: 12px 16px;
+  font-size: 12px;
+}
+
+.menu-footer-logo {
+  display: block;
+  width: 140px;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto 8px;
+}
+
+.menu-license-text {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+:host ::ng-deep .menu-license-link {
+  color: inherit;
+  text-decoration: underline;
+  word-break: break-word;
+}
+
+::ng-deep .action-sheet-button.lang-option .action-sheet-button-inner {
+  justify-content: flex-start;
+}
+
+::ng-deep .action-sheet-button.lang-option .action-sheet-button-inner::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-size: cover;
+  background-position: center;
+}
+
+::ng-deep .action-sheet-button.lang-es .action-sheet-button-inner::before {
+  background-image: url('/assets/images/flags/es.png');
+}
+
+::ng-deep .action-sheet-button.lang-gl .action-sheet-button-inner::before {
+  background-image: url('/assets/images/flags/gl.png');
+}
+
+::ng-deep .action-sheet-button.lang-en .action-sheet-button-inner::before {
+  background-image: url('/assets/images/flags/en.png');
+}
+
+::ng-deep .action-sheet-button.lang-system .action-sheet-button-inner::before {
+  content: none;
+}
+
+::ng-deep .action-sheet-button.lang-system .action-sheet-button-inner {
+  display: flex;
+  align-items: center;
+}
+
+::ng-deep .action-sheet-button.lang-system .action-sheet-icon {
+  order: -1;
+  font-size: 20px;
+  margin-right: 10px;
+  margin-left: 0;
+}
+
+::ng-deep .action-sheet-button.active-language {
+  color: var(--ion-color-primary);
+}
+
+::ng-deep .action-sheet-button.active-theme {
+  color: var(--ion-color-primary);
+}
+
+.menu-footer p {
+  margin: 4px 0;
+  color: inherit;
+}

@@ -1,0 +1,22 @@
+<ion-menu side="start" menuId="main-menu" contentId="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title class="menu-header">
+        <h1 class="main-title">{{ 'common.appName' | i18n }}</h1>
+        <p class="app-version">v{{ appVersion }}</p>
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+
+    <ion-list lines="none">
+      <ion-item class="language-button" lines="full" button (click)="openLanguageSelector()">
+        <ion-label>{{ 'common.language' | i18n }}</ion-label>
+      </ion-item>
+      <ion-item class="theme-button" lines="full" button (click)="openThemeSelector()">
+        <ion-label>{{ 'common.theme' | i18n }}</ion-label>
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+</ion-menu>
