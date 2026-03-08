@@ -1,0 +1,7 @@
+{
+  "name": "webapp-ligaventureros",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
