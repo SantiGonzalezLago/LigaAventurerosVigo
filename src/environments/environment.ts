@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  appName: 'Liga de Aventureros de Vigo',
   version: '0.0.1',
   api: 'https://api.ligadeaventurerosvigo.es/',
 };

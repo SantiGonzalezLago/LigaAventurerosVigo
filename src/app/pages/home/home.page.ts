@@ -7,12 +7,14 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { TranslatePipe } from '../../pipes/translate.pipe';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [IonButtons, IonContent, IonHeader, IonMenuButton, IonTitle, IonToolbar, TranslatePipe],
+  imports: [IonButtons, IonContent, IonHeader, IonMenuButton, IonTitle, IonToolbar],
 })
-export class HomePage {}
+export class HomePage {
+  appName = environment.appName;
+}

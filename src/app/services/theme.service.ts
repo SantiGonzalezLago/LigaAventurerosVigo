@@ -52,9 +52,9 @@ export class ThemeService {
 
   public getThemeOptions(): { value: ThemeMode; label: string }[] {
     return [
-      { value: 'system', label: 'common.system' },
-      { value: 'light', label: 'common.themeLight' },
-      { value: 'dark', label: 'common.themeDark' },
+      { value: 'system', label: 'Por defecto del sistema' },
+      { value: 'light', label: 'Claro' },
+      { value: 'dark', label: 'Oscuro' },
     ];
   }
 
