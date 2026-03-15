@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
+import { ApiService } from './api.service';
 
 export interface UserData {
   uid: string;
@@ -19,6 +20,7 @@ interface UserState {
   providedIn: 'root',
 })
 export class UserService {
+  private readonly api = inject(ApiService);
   private readonly storageKey = 'users_state';
   private readonly usersSubject = new BehaviorSubject<UserData[]>([]);
   private readonly activeUidSubject = new BehaviorSubject<string | null>(null);
@@ -98,6 +100,31 @@ export class UserService {
   public removeUser(uid: string): void {
     const users = this.usersSubject.value.filter((user) => user.uid !== uid);
     const activeUid = this.activeUidSubject.value === uid ? users[0]?.uid ?? null : this.activeUidSubject.value;
+
+    this.updateState(users, activeUid);
+  }
+
+  public loginPassword(user: string, password: string): Observable<boolean> {
+    return this.api.post<unknown, { user: string; password: string }>(
+      'login',
+      { user, password }
+    ).pipe(
+      map(() => {
+        // TODO: Procesar y guardar el payload real cuando se defina la respuesta del endpoint.
+        return true;
+      }),
+      catchError(() => of(false))
+    );
+  }
+
+  public logout(uid?: string): void {
+    const targetUid = uid ?? this.activeUidSubject.value;
+    if (!targetUid) {
+      return;
+    }
+
+    const users = this.usersSubject.value.filter((user) => user.uid !== targetUid);
+    const activeUid = this.activeUidSubject.value === targetUid ? users[0]?.uid ?? null : this.activeUidSubject.value;
 
     this.updateState(users, activeUid);
   }

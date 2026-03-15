@@ -10,7 +10,7 @@
 <ion-tabs>
   <ion-router-outlet></ion-router-outlet>
 
-  <ion-tab-bar slot="bottom">
+  <ion-tab-bar id="main-tab-bar" slot="bottom">
     <ion-tab-button tab="home" href="/tabs/home">
       <ion-icon ios="home-outline" md="home-sharp"></ion-icon>
       <ion-label>Inicio</ion-label>
@@ -36,7 +36,7 @@
         <ion-label>Mi perfil</ion-label>
       </ion-tab-button>
     } @else {
-      <ion-tab-button tab="iniciar-sesion" (click)="onLoginTabClick($event)">
+      <ion-tab-button (click)="onLoginTabClick($event)">
         <ion-icon ios="log-in-outline" md="log-in"></ion-icon>
         <ion-label>Iniciar sesion</ion-label>
       </ion-tab-button>
