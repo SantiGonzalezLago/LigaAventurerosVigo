@@ -7,6 +7,7 @@ export const environment = {
   appName: 'Liga de Aventureros de Vigo',
   version: '0.0.1',
   api: 'https://api.ligadeaventurerosvigo.es/',
+  kofi: 'ko-fi.com/L4L0132AXJ',
 };
 
 /*

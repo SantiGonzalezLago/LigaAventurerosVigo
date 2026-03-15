@@ -36,6 +36,12 @@ ion-list {
   padding-bottom: 0 !important;
 }
 
+.menu-kofi-footer {
+  border-top: 0;
+  box-shadow: none;
+  padding-bottom: max(8px, var(--ion-safe-area-bottom, 0px));
+}
+
 .menu-separator {
   height: 1px;
   margin: 10px 16px;

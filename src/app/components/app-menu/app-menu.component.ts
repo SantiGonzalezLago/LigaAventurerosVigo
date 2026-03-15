@@ -6,6 +6,7 @@ import { ActionSheetController } from '@ionic/angular';
 import {
   IonButton,
   IonContent,
+  IonFooter,
   IonHeader,
   IonItem,
   IonLabel,
@@ -18,6 +19,7 @@ import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { ThemeMode, ThemeService } from 'src/app/services/theme.service';
 import { UserService } from 'src/app/services/user.service';
 import { environment } from '../../../environments/environment';
+import { KofiSupportCardComponent } from '../kofi-support-card/kofi-support-card.component';
 
 addIcons({ moonOutline, phonePortraitOutline, sunnyOutline });
 
@@ -28,6 +30,7 @@ addIcons({ moonOutline, phonePortraitOutline, sunnyOutline });
   imports: [
     AsyncPipe,
     IonContent,
+    IonFooter,
     IonHeader,
     IonItem,
     IonLabel,
@@ -36,6 +39,7 @@ addIcons({ moonOutline, phonePortraitOutline, sunnyOutline });
     IonTitle,
     IonToolbar,
     LoginModalComponent,
+    KofiSupportCardComponent,
   ],
 })
 export class AppMenuComponent {
