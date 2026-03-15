@@ -1,0 +1,28 @@
+.modal-body ion-item {
+  --inner-border-width: 0;
+  --border-width: 0;
+}
+
+.separator {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  color: var(--ion-color-medium-shade);
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  height: 1px;
+  background: var(--ion-color-medium-tint);
+  opacity: 0.45;
+}
+
+.login-modal {
+	--width: min(92vw, 420px);
+	--height: auto;
+	--border-radius: 14px;
+}

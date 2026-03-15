@@ -1,0 +1,15 @@
+:host {
+	--tabs-header-height: 56px;
+}
+
+ion-tabs {
+	position: relative;
+}
+
+ion-tabs ion-router-outlet {
+	position: absolute;
+	top: calc(var(--tabs-header-height) + var(--ion-safe-area-top, 0px));
+	left: 0;
+	right: 0;
+	bottom: 0;
+}

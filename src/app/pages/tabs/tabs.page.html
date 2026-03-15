@@ -1,8 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ appName }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-tabs>
+  <ion-router-outlet></ion-router-outlet>
+
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="home" href="/tabs/home">
       <ion-icon ios="home-outline" md="home-sharp"></ion-icon>
       <ion-label>Inicio</ion-label>
     </ion-tab-button>
+
+    @if (canViewMasterTab()) {
+      <ion-tab-button tab="master" href="/tabs/master">
+        <ion-icon ios="star-outline" md="star"></ion-icon>
+        <ion-label>Master</ion-label>
+      </ion-tab-button>
+    }
+
+    @if (canViewAdminTab()) {
+      <ion-tab-button tab="admin" href="/tabs/admin">
+        <ion-icon ios="shield-checkmark-outline" md="shield-checkmark"></ion-icon>
+        <ion-label>Admin</ion-label>
+      </ion-tab-button>
+    }
+
+    @if (isLoggedIn()) {
+      <ion-tab-button tab="mi-perfil" href="/tabs/mi-perfil">
+        <ion-icon ios="person-circle-outline" md="person-circle"></ion-icon>
+        <ion-label>Mi perfil</ion-label>
+      </ion-tab-button>
+    } @else {
+      <ion-tab-button tab="iniciar-sesion" (click)="onLoginTabClick($event)">
+        <ion-icon ios="log-in-outline" md="log-in"></ion-icon>
+        <ion-label>Iniciar sesion</ion-label>
+      </ion-tab-button>
+    }
   </ion-tab-bar>
 </ion-tabs>
+
+<app-login-modal [isOpen]="isLoginModalOpen" (close)="closeLoginModal()"></app-login-modal>

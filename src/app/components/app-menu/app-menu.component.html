@@ -3,17 +3,46 @@
     <ion-toolbar color="primary">
       <ion-title class="menu-header">
         <h1 class="main-title">{{ appName }}</h1>
-        <p class="app-version">v{{ appVersion }}</p>
       </ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
 
     <ion-list lines="none">
-      <ion-item class="theme-button" lines="full" button (click)="openThemeSelector()">
-        <ion-label>Tema</ion-label>
+
+      @if (users$ | async; as users) {
+        @if (users.length > 0) {
+          @if (activeUid$ | async; as activeUid) {
+            @for (user of users; track user.uid) {
+              <ion-item lines="full" class="user-item">
+                <ion-label>
+                  <h2>{{ user.name }}</h2>
+                </ion-label>
+                @if (user.uid === activeUid) {
+                  <span class="active-badge" slot="end">Activo</span>
+                }
+              </ion-item>
+            }
+            <ion-item lines="none" button (click)="openLoginModal()">
+              <ion-label>Añadir usuario</ion-label>
+            </ion-item>
+          }
+        } @else {
+          <ion-item lines="none" button (click)="openLoginModal()">
+            <ion-label>Iniciar sesión</ion-label>
+          </ion-item>
+        }
+      }
+
+      <div class="menu-separator" aria-hidden="true"></div>
+
+      <ion-item lines="none" button (click)="openThemeSelector()">
+        <ion-label>Apariencia</ion-label>
       </ion-item>
+
     </ion-list>
 
   </ion-content>
 </ion-menu>
+
+<app-login-modal [isOpen]="isLoginModalOpen" (close)="closeLoginModal()"></app-login-modal>

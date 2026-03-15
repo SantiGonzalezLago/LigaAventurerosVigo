@@ -1,20 +1,10 @@
 import { Component } from '@angular/core';
-import {
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonMenuButton,
-  IonTitle,
-  IonToolbar,
-} from '@ionic/angular/standalone';
-import { environment } from '../../../environments/environment';
+import { IonContent } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [IonButtons, IonContent, IonHeader, IonMenuButton, IonTitle, IonToolbar],
+  imports: [IonContent],
 })
-export class HomePage {
-  appName = environment.appName;
-}
+export class HomePage {}

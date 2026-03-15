@@ -1,8 +1,10 @@
 import { Component, inject } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { moonOutline, phonePortraitOutline, sunnyOutline } from 'ionicons/icons';
 import { ActionSheetController } from '@ionic/angular';
 import {
+  IonButton,
   IonContent,
   IonHeader,
   IonItem,
@@ -12,7 +14,9 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
+import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { ThemeMode, ThemeService } from 'src/app/services/theme.service';
+import { UserService } from 'src/app/services/user.service';
 import { environment } from '../../../environments/environment';
 
 addIcons({ moonOutline, phonePortraitOutline, sunnyOutline });
@@ -22,6 +26,7 @@ addIcons({ moonOutline, phonePortraitOutline, sunnyOutline });
   templateUrl: 'app-menu.component.html',
   styleUrls: ['app-menu.component.scss'],
   imports: [
+    AsyncPipe,
     IonContent,
     IonHeader,
     IonItem,
@@ -30,16 +35,21 @@ addIcons({ moonOutline, phonePortraitOutline, sunnyOutline });
     IonMenu,
     IonTitle,
     IonToolbar,
+    LoginModalComponent,
   ],
 })
 export class AppMenuComponent {
   private themeService = inject(ThemeService);
   private actionSheetCtrl = inject(ActionSheetController);
+  private userService = inject(UserService);
 
   currentTheme: ThemeMode = 'system';
   themeOptions: { value: ThemeMode; label: string }[] = [];
   appVersion = environment.version;
   appName = environment.appName;
+  users$ = this.userService.users$;
+  activeUid$ = this.userService.activeUid$;
+  isLoginModalOpen = false;
 
   ngOnInit(): void {
     this.currentTheme = this.themeService.getCurrentTheme();
@@ -75,6 +85,14 @@ export class AppMenuComponent {
     });
 
     await actionSheet.present();
+  }
+
+  public openLoginModal(): void {
+    this.isLoginModalOpen = true;
+  }
+
+  public closeLoginModal(): void {
+    this.isLoginModalOpen = false;
   }
 
   private getThemeButtonClasses(themeValue: ThemeMode, isActive: boolean): string {

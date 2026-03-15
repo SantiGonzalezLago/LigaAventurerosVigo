@@ -36,6 +36,36 @@ ion-list {
   padding-bottom: 0 !important;
 }
 
+.menu-separator {
+  height: 1px;
+  margin: 10px 16px;
+  opacity: 0.7;
+}
+
+.users-header {
+  margin-top: 8px;
+  font-weight: 600;
+  color: var(--ion-color-medium);
+}
+
+.user-item h2 {
+  font-size: 0.95rem;
+}
+
+.user-item p {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.active-badge {
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(var(--ion-color-primary-rgb), 0.14);
+  color: var(--ion-color-primary);
+  font-weight: 600;
+}
+
 h2 {
   margin: 0;
 }
