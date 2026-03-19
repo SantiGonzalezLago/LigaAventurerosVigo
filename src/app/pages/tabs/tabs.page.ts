@@ -25,7 +25,6 @@ import {
   star,
   starOutline,
 } from 'ionicons/icons';
-import { LoginModalComponent } from '../../components/login-modal/login-modal.component';
 import { UserService } from '../../services/user.service';
 import { environment } from '../../../environments/environment';
 
@@ -45,13 +44,12 @@ import { environment } from '../../../environments/environment';
     IonTabs,
     IonTitle,
     IonToolbar,
-    LoginModalComponent,
   ],
 })
 export class TabsPage {
   userService = inject(UserService);
-  isLoginModalOpen = false;
   appName = environment.appName;
+  private loginModalOpener: (() => void) | null = null;
 
   constructor() {
     addIcons({
@@ -86,10 +84,10 @@ export class TabsPage {
   }
 
   public openLoginModal(): void {
-    this.isLoginModalOpen = true;
+    this.loginModalOpener?.();
   }
 
-  public closeLoginModal(): void {
-    this.isLoginModalOpen = false;
+  public setLoginModalOpener(opener: () => void): void {
+    this.loginModalOpener = opener;
   }
 }

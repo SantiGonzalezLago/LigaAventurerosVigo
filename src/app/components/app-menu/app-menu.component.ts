@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { moonOutline, phonePortraitOutline, sunnyOutline } from 'ionicons/icons';
@@ -15,7 +15,6 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { ThemeMode, ThemeService } from 'src/app/services/theme.service';
 import { UserService } from 'src/app/services/user.service';
 import { environment } from '../../../environments/environment';
@@ -38,7 +37,6 @@ addIcons({ moonOutline, phonePortraitOutline, sunnyOutline });
     IonMenu,
     IonTitle,
     IonToolbar,
-    LoginModalComponent,
     KofiSupportCardComponent,
   ],
 })
@@ -46,6 +44,7 @@ export class AppMenuComponent {
   private themeService = inject(ThemeService);
   private actionSheetCtrl = inject(ActionSheetController);
   private userService = inject(UserService);
+  @Input() loginModalOpener: (() => void) | null = null;
 
   currentTheme: ThemeMode = 'system';
   themeOptions: { value: ThemeMode; label: string }[] = [];
@@ -53,7 +52,6 @@ export class AppMenuComponent {
   appName = environment.appName;
   users$ = this.userService.users$;
   activeUid$ = this.userService.activeUid$;
-  isLoginModalOpen = false;
 
   ngOnInit(): void {
     this.currentTheme = this.themeService.getCurrentTheme();
@@ -92,11 +90,7 @@ export class AppMenuComponent {
   }
 
   public openLoginModal(): void {
-    this.isLoginModalOpen = true;
-  }
-
-  public closeLoginModal(): void {
-    this.isLoginModalOpen = false;
+    this.loginModalOpener?.();
   }
 
   private getThemeButtonClasses(themeValue: ThemeMode, isActive: boolean): string {

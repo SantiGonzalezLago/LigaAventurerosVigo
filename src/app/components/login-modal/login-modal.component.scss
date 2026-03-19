@@ -39,6 +39,10 @@
   justify-content: center;
 }
 
+.login-modal ion-toolbar ion-buttons[slot='end'] {
+  margin-inline-end: 8px;
+}
+
 .login-modal {
 	--width: min(92vw, 420px);
 	--height: auto;

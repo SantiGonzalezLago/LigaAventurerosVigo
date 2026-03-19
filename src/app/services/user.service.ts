@@ -7,6 +7,7 @@ export interface UserData {
   jwt: string;
   name: string;
   email: string;
+  verified: boolean;
   master: boolean;
   admin: boolean;
 }
@@ -198,6 +199,7 @@ export class UserService {
       typeof candidate['jwt'] === 'string' &&
       typeof candidate['name'] === 'string' &&
       typeof candidate['email'] === 'string' &&
+      typeof candidate['verified'] === 'boolean' &&
       typeof candidate['master'] === 'boolean' &&
       typeof candidate['admin'] === 'boolean'
     );

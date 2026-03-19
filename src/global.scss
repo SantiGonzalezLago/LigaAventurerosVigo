@@ -43,3 +43,10 @@ ion-button {
 ion-button::part(native) {
 	text-transform: none !important;
 }
+
+.round-button::part(native) {
+	width: 32px;
+	height: 32px;
+	border-radius: 999px;
+	padding: 0;
+}
