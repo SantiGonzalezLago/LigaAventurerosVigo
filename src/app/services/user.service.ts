@@ -1,4 +1,5 @@
 import { inject, Injectable } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 import { ApiService } from './api.service';
 
@@ -15,6 +16,11 @@ export interface UserData {
 interface UserState {
   users: UserData[];
   activeUid: string | null;
+}
+
+export interface LoginResult {
+  success: boolean;
+  message?: string;
 }
 
 @Injectable({
@@ -105,16 +111,19 @@ export class UserService {
     this.updateState(users, activeUid);
   }
 
-  public loginPassword(user: string, password: string): Observable<boolean> {
+  public loginPassword(user: string, password: string): Observable<LoginResult> {
     return this.api.post<unknown, { user: string; password: string }>(
       'login',
       { user, password }
     ).pipe(
       map(() => {
         // TODO: Procesar y guardar el payload real cuando se defina la respuesta del endpoint.
-        return true;
+        return { success: true };
       }),
-      catchError(() => of(false))
+      catchError((error: unknown) => of({
+        success: false,
+        message: this.extractErrorMessage(error),
+      }))
     );
   }
 
@@ -203,5 +212,24 @@ export class UserService {
       typeof candidate['master'] === 'boolean' &&
       typeof candidate['admin'] === 'boolean'
     );
+  }
+
+  private extractErrorMessage(error: unknown): string | undefined {
+    if (!(error instanceof HttpErrorResponse)) {
+      return undefined;
+    }
+
+    if (typeof error.error === 'string' && error.error.trim()) {
+      return error.error;
+    }
+
+    if (!error.error || typeof error.error !== 'object') {
+      return undefined;
+    }
+
+    const payload = error.error as Record<string, unknown>;
+    const message = payload['message'];
+
+    return typeof message === 'string' && message.trim() ? message : undefined;
   }
 }

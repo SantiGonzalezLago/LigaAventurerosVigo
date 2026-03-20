@@ -33,7 +33,6 @@ export class ApiService {
     params?: QueryParams,
     headers?: RequestHeaders
   ): Observable<T> {
-    console.log('POST', this.buildUrl(endpoint), { body, params, headers });
     return this.http.post<T>(this.buildUrl(endpoint), body, {
       params: this.toHttpParams(params),
       headers: this.toHttpHeaders(headers),

@@ -52,17 +52,17 @@ export class LoginModalComponent {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    this.userService.loginPassword(this.user.trim(), this.password).pipe(take(1)).subscribe((success) => {
+    this.userService.loginPassword(this.user.trim(), this.password).pipe(take(1)).subscribe((result) => {
       this.isSubmitting = false;
 
-      if (success) {
+      if (result.success) {
         void this.showLoginSuccessToast();
         this.resetForm();
         this.close.emit();
         return;
       }
 
-      this.errorMessage = 'Usuario o contraseña incorrectos';
+      this.errorMessage = result.message ?? 'No se pudo iniciar sesion';
     });
   }
 
