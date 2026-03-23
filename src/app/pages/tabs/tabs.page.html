@@ -31,7 +31,7 @@
     }
 
     @if (isLoggedIn()) {
-      <ion-tab-button tab="perfil" href="/tabs/perfil">
+      <ion-tab-button tab="profile" href="/tabs/profile">
         @if (getActiveUserAvatar(); as userAvatar) {
           <span class="profile-tab-avatar" aria-hidden="true">
             <img [src]="userAvatar" alt="" />
@@ -44,7 +44,7 @@
     } @else {
       <ion-tab-button (click)="onLoginTabClick($event)">
         <ion-icon ios="log-in-outline" md="log-in"></ion-icon>
-        <ion-label>Iniciar sesion</ion-label>
+        <ion-label>Iniciar sesión</ion-label>
       </ion-tab-button>
     }
   </ion-tab-bar>

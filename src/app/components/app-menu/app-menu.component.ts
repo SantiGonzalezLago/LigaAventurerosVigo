@@ -1,7 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, compass, compassOutline, shieldCheckmark, shieldCheckmarkOutline, sunnyOutline } from 'ionicons/icons';
+import { colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, compass, compassOutline, shieldCheckmark, shieldCheckmarkOutline, sunnyOutline, settings, settingsOutline } from 'ionicons/icons';
 import { ActionSheetController } from '@ionic/angular';
 import {
   IonContent,
@@ -18,7 +18,7 @@ import { UserService } from 'src/app/services/user.service';
 import { environment } from '../../../environments/environment';
 import { KofiSupportCardComponent } from '../kofi-support-card/kofi-support-card.component';
 
-addIcons({ colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, compass, compassOutline, shieldCheckmark, shieldCheckmarkOutline, sunnyOutline });
+addIcons({ colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, compass, compassOutline, shieldCheckmark, shieldCheckmarkOutline, sunnyOutline, settings, settingsOutline });
 
 @Component({
   selector: 'app-menu',
@@ -96,6 +96,10 @@ export class AppMenuComponent {
 
   public logout(uid: string): void {
     this.userService.logout(uid);
+  }
+
+  public isLoggedIn(): boolean {
+    return this.userService.isLoggedIn();
   }
 
   private getThemeButtonClasses(themeValue: ThemeMode, isActive: boolean): string {

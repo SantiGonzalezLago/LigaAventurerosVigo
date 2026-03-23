@@ -71,7 +71,7 @@
                 (click)="openLoginModal()"
               >
                 <span class="menu-badge-main">
-                  <span class="menu-badge-avatar menu-badge-avatar-add" aria-hidden="true">+</span>
+                  <span class="menu-badge-avatar menu-badge-avatar-action" aria-hidden="true">+</span>
                   <span class="menu-badge-name">Añadir usuario</span>
                 </span>
               </button>
@@ -85,7 +85,7 @@
               (click)="openLoginModal()"
             >
               <span class="menu-badge-main">
-                <span class="menu-badge-avatar menu-badge-avatar-add" aria-hidden="true">+</span>
+                <span class="menu-badge-avatar menu-badge-avatar-action" aria-hidden="true">+</span>
                 <span class="menu-badge-name">Iniciar sesión</span>
               </span>
             </button>
@@ -93,7 +93,44 @@
         }
       }
 
-      <div class="menu-block">
+      <div class="menu-block" role="list" aria-label="Navegacion">
+        <a
+          role="listitem"
+          class="menu-badge"
+          href="/personajes"
+        >
+          <span class="menu-badge-main">
+            <span class="menu-badge-name">Todos los personajes</span>
+          </span>
+        </a>
+
+        <a
+          role="listitem"
+          class="menu-badge"
+          href="/recursos"
+        >
+          <span class="menu-badge-main">
+            <span class="menu-badge-name">Recursos</span>
+          </span>
+        </a>
+      </div>
+
+      <div class="menu-block" aria-label="Configuración">
+        @if (isLoggedIn()) {
+          <a
+            role="listitem"
+            class="menu-badge"
+            href="/settings"
+          >
+            <span class="menu-badge-main">
+              <span class="menu-badge-avatar menu-badge-avatar-action" aria-hidden="true">
+                <ion-icon ios="settings-outline" md="settings"></ion-icon>
+              </span>
+              <span class="menu-badge-name">Configuración</span>
+            </span>
+          </a>
+        }
+
         <button
           type="button"
           class="menu-badge"
