@@ -16,6 +16,8 @@
 ion-list {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+  --background: transparent !important;
+  background: transparent !important;
 }
 
 .menu-kofi-footer {
@@ -25,8 +27,7 @@ ion-list {
 }
 
 .menu-separator {
-  height: 1px;
-  margin: 5px 16px;
+  height: 5px;
 }
 
 
