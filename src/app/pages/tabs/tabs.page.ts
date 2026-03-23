@@ -78,6 +78,11 @@ export class TabsPage {
     return this.userService.isLoggedIn();
   }
 
+  public getActiveUserAvatar(): string | null {
+    const avatar = this.userService.getActiveUser()?.avatar?.trim();
+    return avatar ? avatar : null;
+  }
+
   public onLoginTabClick(event: Event): void {
     event.preventDefault();
     this.openLoginModal();

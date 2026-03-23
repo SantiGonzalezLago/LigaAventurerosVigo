@@ -67,16 +67,12 @@ ion-list {
   color: var(--ion-color-primary-shade);
 }
 
-.menu-badge--add {
+.menu-badge-add {
   border-style: dashed;
   color: var(--ion-color-medium-shade);
 }
 
-.menu-badge--menu-action {
-  color: var(--ion-color-dark);
-}
-
-.menu-badge-avatar--add {
+.menu-badge-avatar-add {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -86,7 +82,7 @@ ion-list {
   color: var(--ion-color-medium-shade);
 }
 
-.menu-badge-avatar--action {
+.menu-badge-avatar-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -94,7 +90,7 @@ ion-list {
   color: var(--ion-color-primary);
 }
 
-.menu-badge-avatar--action ion-icon {
+.menu-badge-avatar-action ion-icon {
   font-size: 1rem;
 }
 
@@ -113,7 +109,7 @@ ion-list {
   flex: 0 0 28px;
 }
 
-.menu-badge-avatar--fallback {
+.menu-badge-avatar-fallback {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -162,11 +158,11 @@ ion-list {
   font-size: 1rem;
 }
 
-.user-role-icon--master {
+.user-role-icon-master {
   color: var(--ion-color-warning-shade);
 }
 
-.user-role-icon--admin {
+.user-role-icon-admin {
   color: var(--ion-color-danger-shade);
 }
 

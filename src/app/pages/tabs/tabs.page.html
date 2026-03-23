@@ -31,8 +31,14 @@
     }
 
     @if (isLoggedIn()) {
-      <ion-tab-button tab="mi-perfil" href="/tabs/mi-perfil">
-        <ion-icon ios="person-circle-outline" md="person-circle"></ion-icon>
+      <ion-tab-button tab="perfil" href="/tabs/perfil">
+        @if (getActiveUserAvatar(); as userAvatar) {
+          <span class="profile-tab-avatar" aria-hidden="true">
+            <img [src]="userAvatar" alt="" />
+          </span>
+        } @else {
+          <ion-icon ios="person-circle-outline" md="person-circle"></ion-icon>
+        }
         <ion-label>Mi perfil</ion-label>
       </ion-tab-button>
     } @else {

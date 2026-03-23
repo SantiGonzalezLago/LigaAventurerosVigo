@@ -19,7 +19,7 @@
                   type="button"
                   role="listitem"
                   class="menu-badge"
-                  [class.menu-badge--active]="user.uid === activeUid"
+                  [class.menu-badge-active]="user.uid === activeUid"
                   [attr.aria-pressed]="user.uid === activeUid"
                   (click)="setActiveUser(user.uid)"
                 >
@@ -27,7 +27,7 @@
                     @if (user.avatar) {
                       <img class="menu-badge-avatar" [src]="user.avatar" [alt]="'Avatar de ' + user.name" />
                     } @else {
-                      <span class="menu-badge-avatar menu-badge-avatar--fallback" aria-hidden="true">
+                      <span class="menu-badge-avatar menu-badge-avatar-fallback" aria-hidden="true">
                         {{ user.name.charAt(0).toUpperCase() }}
                       </span>
                     }
@@ -35,7 +35,7 @@
                     <span class="menu-badge-roles">
                       @if (user.master || user.admin) {
                         <ion-icon
-                          class="user-role-icon user-role-icon--master"
+                          class="user-role-icon user-role-icon-master"
                           ios="compass-outline"
                           md="compass"
                           title="Master"
@@ -44,7 +44,7 @@
                       }
                       @if (user.admin) {
                         <ion-icon
-                          class="user-role-icon user-role-icon--admin"
+                          class="user-role-icon user-role-icon-admin"
                           ios="shield-checkmark-outline"
                           md="shield-checkmark"
                           title="Admin"
@@ -67,11 +67,11 @@
               <button
                 type="button"
                 role="listitem"
-                class="menu-badge menu-badge--add"
+                class="menu-badge menu-badge-add"
                 (click)="openLoginModal()"
               >
                 <span class="menu-badge-main">
-                  <span class="menu-badge-avatar menu-badge-avatar--add" aria-hidden="true">+</span>
+                  <span class="menu-badge-avatar menu-badge-avatar-add" aria-hidden="true">+</span>
                   <span class="menu-badge-name">Añadir usuario</span>
                 </span>
               </button>
@@ -81,11 +81,11 @@
           <div class="menu-block">
             <button
               type="button"
-              class="menu-badge menu-badge--add"
+              class="menu-badge menu-badge-add"
               (click)="openLoginModal()"
             >
               <span class="menu-badge-main">
-                <span class="menu-badge-avatar menu-badge-avatar--add" aria-hidden="true">+</span>
+                <span class="menu-badge-avatar menu-badge-avatar-add" aria-hidden="true">+</span>
                 <span class="menu-badge-name">Iniciar sesión</span>
               </span>
             </button>
@@ -96,11 +96,11 @@
       <div class="menu-block">
         <button
           type="button"
-          class="menu-badge menu-badge--menu-action"
+          class="menu-badge"
           (click)="openThemeSelector()"
         >
           <span class="menu-badge-main">
-            <span class="menu-badge-avatar menu-badge-avatar--action" aria-hidden="true">
+            <span class="menu-badge-avatar menu-badge-avatar-action" aria-hidden="true">
               <ion-icon name="color-palette-outline"></ion-icon>
             </span>
             <span class="menu-badge-name">Apariencia</span>
