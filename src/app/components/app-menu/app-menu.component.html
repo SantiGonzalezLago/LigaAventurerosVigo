@@ -13,7 +13,7 @@
       @if (users$ | async; as users) {
         @if (users.length > 0) {
           @if (activeUid$ | async; as activeUid) {
-            <div class="users-badges" role="list" aria-label="Usuarios">
+            <div class="menu-block" role="list" aria-label="Usuarios">
               @for (user of users; track user.uid) {
                 <button
                   type="button"
@@ -78,7 +78,7 @@
             </div>
           }
         } @else {
-          <div class="users-badges">
+          <div class="menu-block">
             <button
               type="button"
               class="menu-badge menu-badge--add"
@@ -93,9 +93,7 @@
         }
       }
 
-      <div class="menu-separator" aria-hidden="true"></div>
-
-      <div class="menu-action-badges">
+      <div class="menu-block">
         <button
           type="button"
           class="menu-badge menu-badge--menu-action"
