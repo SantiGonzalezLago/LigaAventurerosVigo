@@ -36,8 +36,7 @@
                       @if (user.master || user.admin) {
                         <ion-icon
                           class="user-role-icon user-role-icon-master"
-                          ios="compass-outline"
-                          md="compass"
+                          name="compass"
                           title="Master"
                           aria-label="Master"
                         ></ion-icon>
@@ -45,8 +44,7 @@
                       @if (user.admin) {
                         <ion-icon
                           class="user-role-icon user-role-icon-admin"
-                          ios="shield-checkmark-outline"
-                          md="shield-checkmark"
+                          name="shield-checkmark"
                           title="Admin"
                           aria-label="Admin"
                         ></ion-icon>
@@ -95,7 +93,8 @@
 
       <div class="menu-block" role="list" aria-label="Navegacion">
         <ion-menu-toggle auto-hide="true">
-          <a
+          <button
+            type="button"
             role="listitem"
             class="menu-badge"
             routerLink="/all-characters"
@@ -104,11 +103,12 @@
             <span class="menu-badge-main">
               <span class="menu-badge-name">Todos los personajes</span>
             </span>
-          </a>
+          </button>
         </ion-menu-toggle>
 
         <ion-menu-toggle auto-hide="true">
-          <a
+          <button
+            type="button"
             role="listitem"
             class="menu-badge"
             routerLink="/resources"
@@ -117,14 +117,15 @@
             <span class="menu-badge-main">
               <span class="menu-badge-name">Recursos</span>
             </span>
-          </a>
+          </button>
         </ion-menu-toggle>
       </div>
 
-      <div class="menu-block" aria-label="Configuración">
+      <div class="menu-block" role="list" aria-label="Configuración">
         @if (isLoggedIn()) {
           <ion-menu-toggle auto-hide="true">
-            <a
+            <button
+              type="button"
               role="listitem"
               class="menu-badge"
               routerLink="/settings"
@@ -132,16 +133,17 @@
             >
               <span class="menu-badge-main">
                 <span class="menu-badge-avatar menu-badge-avatar-action" aria-hidden="true">
-                  <ion-icon ios="settings-outline" md="settings"></ion-icon>
+                  <ion-icon name="settings-outline"></ion-icon>
                 </span>
                 <span class="menu-badge-name">Configuración</span>
               </span>
-            </a>
+            </button>
           </ion-menu-toggle>
         }
 
         <button
           type="button"
+          role="listitem"
           class="menu-badge"
           (click)="openThemeSelector()"
         >

@@ -2,7 +2,7 @@ import { Component, inject, Input } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, compass, compassOutline, shieldCheckmark, shieldCheckmarkOutline, sunnyOutline, settings, settingsOutline } from 'ionicons/icons';
+import { moonOutline, phonePortraitOutline, closeCircle, compass, shieldCheckmark, sunnyOutline, settingsOutline, colorPaletteOutline } from 'ionicons/icons';
 import { ActionSheetController } from '@ionic/angular';
 import {
   IonContent,
@@ -20,7 +20,7 @@ import { UserService } from 'src/app/services/user.service';
 import { environment } from '../../../environments/environment';
 import { KofiSupportCardComponent } from '../kofi-support-card/kofi-support-card.component';
 
-addIcons({ colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, compass, compassOutline, shieldCheckmark, shieldCheckmarkOutline, sunnyOutline, settings, settingsOutline });
+addIcons({ colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, compass, shieldCheckmark, sunnyOutline, settingsOutline });
 
 @Component({
   selector: 'app-menu',

@@ -14,16 +14,11 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  homeOutline,
   homeSharp,
   compass,
-  compassOutline,
   logIn,
-  logInOutline,
   personCircle,
-  personCircleOutline,
   shieldCheckmark,
-  shieldCheckmarkOutline,
 } from 'ionicons/icons';
 import { UserService } from '../../services/user.service';
 import { environment } from '../../../environments/environment';
@@ -53,15 +48,10 @@ export class TabsPage {
 
   constructor() {
     addIcons({
-      homeOutline,
       homeSharp,
       compass,
-      compassOutline,
-      logInOutline,
       logIn,
-      shieldCheckmarkOutline,
       shieldCheckmark,
-      personCircleOutline,
       personCircle,
     });
   }
