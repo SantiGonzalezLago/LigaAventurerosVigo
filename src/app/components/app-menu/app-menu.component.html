@@ -94,41 +94,50 @@
       }
 
       <div class="menu-block" role="list" aria-label="Navegacion">
-        <a
-          role="listitem"
-          class="menu-badge"
-          href="/personajes"
-        >
-          <span class="menu-badge-main">
-            <span class="menu-badge-name">Todos los personajes</span>
-          </span>
-        </a>
+        <ion-menu-toggle auto-hide="true">
+          <a
+            role="listitem"
+            class="menu-badge"
+            routerLink="/all-characters"
+            routerDirection="forward"
+          >
+            <span class="menu-badge-main">
+              <span class="menu-badge-name">Todos los personajes</span>
+            </span>
+          </a>
+        </ion-menu-toggle>
 
-        <a
-          role="listitem"
-          class="menu-badge"
-          href="/recursos"
-        >
-          <span class="menu-badge-main">
-            <span class="menu-badge-name">Recursos</span>
-          </span>
-        </a>
+        <ion-menu-toggle auto-hide="true">
+          <a
+            role="listitem"
+            class="menu-badge"
+            routerLink="/resources"
+            routerDirection="forward"
+          >
+            <span class="menu-badge-main">
+              <span class="menu-badge-name">Recursos</span>
+            </span>
+          </a>
+        </ion-menu-toggle>
       </div>
 
       <div class="menu-block" aria-label="Configuración">
         @if (isLoggedIn()) {
-          <a
-            role="listitem"
-            class="menu-badge"
-            href="/settings"
-          >
-            <span class="menu-badge-main">
-              <span class="menu-badge-avatar menu-badge-avatar-action" aria-hidden="true">
-                <ion-icon ios="settings-outline" md="settings"></ion-icon>
+          <ion-menu-toggle auto-hide="true">
+            <a
+              role="listitem"
+              class="menu-badge"
+              routerLink="/settings"
+              routerDirection="forward"
+            >
+              <span class="menu-badge-main">
+                <span class="menu-badge-avatar menu-badge-avatar-action" aria-hidden="true">
+                  <ion-icon ios="settings-outline" md="settings"></ion-icon>
+                </span>
+                <span class="menu-badge-name">Configuración</span>
               </span>
-              <span class="menu-badge-name">Configuración</span>
-            </span>
-          </a>
+            </a>
+          </ion-menu-toggle>
         }
 
         <button

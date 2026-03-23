@@ -1,5 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, compass, compassOutline, shieldCheckmark, shieldCheckmarkOutline, sunnyOutline, settings, settingsOutline } from 'ionicons/icons';
 import { ActionSheetController } from '@ionic/angular';
@@ -10,6 +11,7 @@ import {
   IonIcon,
   IonList,
   IonMenu,
+  IonMenuToggle,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
@@ -32,8 +34,10 @@ addIcons({ colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, 
     IonIcon,
     IonList,
     IonMenu,
+    IonMenuToggle,
     IonTitle,
     IonToolbar,
+    RouterLink,
     KofiSupportCardComponent,
   ],
 })
