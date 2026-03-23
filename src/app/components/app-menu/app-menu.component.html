@@ -13,32 +13,102 @@
       @if (users$ | async; as users) {
         @if (users.length > 0) {
           @if (activeUid$ | async; as activeUid) {
-            @for (user of users; track user.uid) {
-              <ion-item lines="full" class="user-item">
-                <ion-label>
-                  <h2>{{ user.name }}</h2>
-                </ion-label>
-                @if (user.uid === activeUid) {
-                  <span class="active-badge" slot="end">Activo</span>
-                }
-              </ion-item>
-            }
-            <ion-item lines="none" button (click)="openLoginModal()">
-              <ion-label>Añadir usuario</ion-label>
-            </ion-item>
+            <div class="users-badges" role="list" aria-label="Usuarios">
+              @for (user of users; track user.uid) {
+                <button
+                  type="button"
+                  role="listitem"
+                  class="menu-badge"
+                  [class.menu-badge--active]="user.uid === activeUid"
+                  [attr.aria-pressed]="user.uid === activeUid"
+                  (click)="setActiveUser(user.uid)"
+                >
+                  <span class="menu-badge-main">
+                    @if (user.avatar) {
+                      <img class="menu-badge-avatar" [src]="user.avatar" [alt]="'Avatar de ' + user.name" />
+                    } @else {
+                      <span class="menu-badge-avatar menu-badge-avatar--fallback" aria-hidden="true">
+                        {{ user.name.charAt(0).toUpperCase() }}
+                      </span>
+                    }
+                    <span class="menu-badge-name">{{ user.name }}</span>
+                    <span class="menu-badge-roles">
+                      @if (user.master || user.admin) {
+                        <ion-icon
+                          class="user-role-icon user-role-icon--master"
+                          ios="compass-outline"
+                          md="compass"
+                          title="Master"
+                          aria-label="Master"
+                        ></ion-icon>
+                      }
+                      @if (user.admin) {
+                        <ion-icon
+                          class="user-role-icon user-role-icon--admin"
+                          ios="shield-checkmark-outline"
+                          md="shield-checkmark"
+                          title="Admin"
+                          aria-label="Admin"
+                        ></ion-icon>
+                      }
+                    </span>
+                  </span>
+                  <button
+                    type="button"
+                    class="menu-badge-logout"
+                    [attr.aria-label]="'Cerrar sesión de ' + user.name"
+                    title="Cerrar sesión"
+                    (click)="$event.stopPropagation(); logout(user.uid)"
+                  >
+                    <ion-icon name="close-circle" aria-hidden="true"></ion-icon>
+                  </button>
+                </button>
+              }
+              <button
+                type="button"
+                role="listitem"
+                class="menu-badge menu-badge--add"
+                (click)="openLoginModal()"
+              >
+                <span class="menu-badge-main">
+                  <span class="menu-badge-avatar menu-badge-avatar--add" aria-hidden="true">+</span>
+                  <span class="menu-badge-name">Añadir usuario</span>
+                </span>
+              </button>
+            </div>
           }
         } @else {
-          <ion-item lines="none" button (click)="openLoginModal()">
-            <ion-label>Iniciar sesión</ion-label>
-          </ion-item>
+          <div class="users-badges">
+            <button
+              type="button"
+              class="menu-badge menu-badge--add"
+              (click)="openLoginModal()"
+            >
+              <span class="menu-badge-main">
+                <span class="menu-badge-avatar menu-badge-avatar--add" aria-hidden="true">+</span>
+                <span class="menu-badge-name">Iniciar sesión</span>
+              </span>
+            </button>
+          </div>
         }
       }
 
       <div class="menu-separator" aria-hidden="true"></div>
 
-      <ion-item lines="none" button (click)="openThemeSelector()">
-        <ion-label>Apariencia</ion-label>
-      </ion-item>
+      <div class="menu-action-badges">
+        <button
+          type="button"
+          class="menu-badge menu-badge--menu-action"
+          (click)="openThemeSelector()"
+        >
+          <span class="menu-badge-main">
+            <span class="menu-badge-avatar menu-badge-avatar--action" aria-hidden="true">
+              <ion-icon name="color-palette-outline"></ion-icon>
+            </span>
+            <span class="menu-badge-name">Apariencia</span>
+          </span>
+        </button>
+      </div>
 
     </ion-list>
   </ion-content>

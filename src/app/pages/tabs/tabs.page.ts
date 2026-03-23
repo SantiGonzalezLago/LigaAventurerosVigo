@@ -16,14 +16,14 @@ import { addIcons } from 'ionicons';
 import {
   homeOutline,
   homeSharp,
+  compass,
+  compassOutline,
   logIn,
   logInOutline,
   personCircle,
   personCircleOutline,
   shieldCheckmark,
   shieldCheckmarkOutline,
-  star,
-  starOutline,
 } from 'ionicons/icons';
 import { UserService } from '../../services/user.service';
 import { environment } from '../../../environments/environment';
@@ -55,10 +55,10 @@ export class TabsPage {
     addIcons({
       homeOutline,
       homeSharp,
+      compass,
+      compassOutline,
       logInOutline,
       logIn,
-      starOutline,
-      star,
       shieldCheckmarkOutline,
       shieldCheckmark,
       personCircleOutline,

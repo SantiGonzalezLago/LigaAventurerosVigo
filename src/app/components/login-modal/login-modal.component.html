@@ -1,4 +1,4 @@
-<ion-modal class="login-modal" [isOpen]="isOpen" (didDismiss)="onDidDismiss()">
+<ion-modal class="login-modal" [isOpen]="isOpen" (didPresent)="onDidPresent()" (didDismiss)="onDidDismiss()">
   <ng-template>
     <ion-header>
       <ion-toolbar>
@@ -51,10 +51,22 @@
         <span>o</span>
       </div>
 
-      <ion-button class="google-login-button" expand="block" fill="outline" aria-label="Continuar con Google">
-        <span>Continuar con</span>
-        <img class="google-logo" src="assets/images/google.svg" alt="Google" />
-      </ion-button>
+      <div class="google-login-section">
+        @if (isGoogleLoading) {
+          <ion-text color="medium" class="google-status">Preparando acceso con Google...</ion-text>
+        }
+
+        @if (googleErrorMessage) {
+          <ion-text color="danger" class="login-error">{{ googleErrorMessage }}</ion-text>
+          <ion-button fill="clear" size="small" [disabled]="isGoogleLoading" (click)="retryGoogleSetup()">
+            Reintentar Google
+          </ion-button>
+        }
+
+        @if (googleButtonReady) {
+          <div #googleButtonContainer class="google-button-container"></div>
+        }
+      </div>
     </div>
   </ng-template>
 </ion-modal>

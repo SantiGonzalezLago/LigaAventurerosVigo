@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, take } from 'rxjs';
 import { ApiService } from './api.service';
 
 export interface UserData {
@@ -8,6 +8,7 @@ export interface UserData {
   jwt: string;
   name: string;
   email: string;
+  avatar: string | null;
   verified: boolean;
   master: boolean;
   admin: boolean;
@@ -31,12 +32,18 @@ export class UserService {
   private readonly storageKey = 'users_state';
   private readonly usersSubject = new BehaviorSubject<UserData[]>([]);
   private readonly activeUidSubject = new BehaviorSubject<string | null>(null);
+  private googleClientId: string | null = null;
 
   public readonly users$ = this.usersSubject.asObservable();
   public readonly activeUid$ = this.activeUidSubject.asObservable();
 
   constructor() {
     this.loadFromStorage();
+
+    const activeUid = this.activeUidSubject.value;
+    if (activeUid) {
+      this.refreshUser(activeUid).pipe(take(1)).subscribe();
+    }
   }
 
   public getUsers(): UserData[] {
@@ -101,7 +108,34 @@ export class UserService {
     }
 
     this.updateState(this.usersSubject.value, uid);
+    this.refreshUser(uid).pipe(take(1)).subscribe();
     return true;
+  }
+
+  public refreshUser(uid: string): Observable<void> {
+    const user = this.getUserByUid(uid);
+    if (!user) {
+      return of(undefined);
+    }
+
+    return this.api.get<{ message: string; user: UserData }>(
+      'me',
+      undefined,
+      { Authorization: `Bearer ${user.jwt}` }
+    ).pipe(
+      map((response) => {
+        if (this.isValidUser(response.user)) {
+          this.saveUser(response.user);
+        }
+      }),
+      catchError((error: unknown) => {
+        if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 403)) {
+          this.logout(uid);
+        }
+
+        return of(undefined);
+      })
+    );
   }
 
   public removeUser(uid: string): void {
@@ -112,12 +146,71 @@ export class UserService {
   }
 
   public loginPassword(user: string, password: string): Observable<LoginResult> {
-    return this.api.post<unknown, { user: string; password: string }>(
+    return this.api.post<{ message: string; user: UserData }, { user: string; password: string }>(
       'login',
       { user, password }
     ).pipe(
-      map(() => {
-        // TODO: Procesar y guardar el payload real cuando se defina la respuesta del endpoint.
+      map((response) => {
+        if (!this.isValidUser(response.user)) {
+          return {
+            success: false,
+            message: 'Respuesta de usuario inválida',
+          };
+        }
+
+        this.saveUser(response.user, true);
+
+        return { success: true };
+      }),
+      catchError((error: unknown) => of({
+        success: false,
+        message: this.extractErrorMessage(error),
+      }))
+    );
+  }
+
+  public getGoogleClientId(forceRefresh = false): Observable<string> {
+    if (!forceRefresh && this.googleClientId) {
+      return of(this.googleClientId);
+    }
+
+    return this.api.get<{ message: string; google_client_id?: string }>('login/google').pipe(
+      map((response) => {
+        const clientId = typeof response.google_client_id === 'string' ? response.google_client_id.trim() : '';
+
+        if (!clientId) {
+          throw new Error('Google OAuth no está configurado');
+        }
+
+        this.googleClientId = clientId;
+        return clientId;
+      })
+    );
+  }
+
+  public loginGoogle(idToken: string): Observable<LoginResult> {
+    const normalizedToken = idToken.trim();
+    if (!normalizedToken) {
+      return of({
+        success: false,
+        message: 'El token de Google es obligatorio',
+      });
+    }
+
+    return this.api.post<{ message: string; user: UserData }, { id_token: string }>(
+      'login/google',
+      { id_token: normalizedToken }
+    ).pipe(
+      map((response) => {
+        if (!this.isValidUser(response.user)) {
+          return {
+            success: false,
+            message: 'Respuesta de usuario inválida',
+          };
+        }
+
+        this.saveUser(response.user, true);
+
         return { success: true };
       }),
       catchError((error: unknown) => of({
@@ -208,6 +301,7 @@ export class UserService {
       typeof candidate['jwt'] === 'string' &&
       typeof candidate['name'] === 'string' &&
       typeof candidate['email'] === 'string' &&
+      (typeof candidate['avatar'] === 'string' || candidate['avatar'] === null) &&
       typeof candidate['verified'] === 'boolean' &&
       typeof candidate['master'] === 'boolean' &&
       typeof candidate['admin'] === 'boolean'
@@ -228,6 +322,12 @@ export class UserService {
     }
 
     const payload = error.error as Record<string, unknown>;
+    const errorText = payload['error'];
+
+    if (typeof errorText === 'string' && errorText.trim()) {
+      return errorText;
+    }
+
     const message = payload['message'];
 
     return typeof message === 'string' && message.trim() ? message : undefined;
