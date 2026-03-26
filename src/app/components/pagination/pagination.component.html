@@ -1,0 +1,26 @@
+<div class="pagination-container">
+  <div class="pagination-summary">
+    @if (totalPages > 1) {
+      Mostrando {{ itemsCount }} de {{ total }} resultados
+    } @else {
+      Mostrando {{ itemsCount }} resultados
+    }
+  </div>
+  @if (totalPages > 1) {
+    <div class="pagination-controls">
+      <div class="pagination-track">
+        @if (showFirstButton()) {
+          <button class="page-btn" [disabled]="currentPage === 1" (click)="goTo(1)" aria-label="Primero">«</button>
+        }
+
+        @for (p of getPageNumbers(); track p) {
+          <button class="page-btn" [class.active]="currentPage === p" (click)="goTo(p)">{{ p }}</button>
+        }
+
+        @if (showLastButton()) {
+          <button class="page-btn" [disabled]="currentPage >= totalPages" (click)="goTo(totalPages)" aria-label="Último">»</button>
+        }
+      </div>
+    </div>
+  }
+</div>

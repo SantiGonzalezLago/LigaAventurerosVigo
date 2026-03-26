@@ -1,10 +1,10 @@
 # webapp-ligaventureros
 
-Aplicacion web/movil de **Liga de Aventureros de Vigo** construida con **Ionic 8 + Angular 20 (standalone)** y preparada para integracion con Capacitor.
+Aplicacion web/movil de la Liga de Aventureros de Vigo construida con Ionic + Angular (standalone), con soporte de cuentas multiples, roles y rutas protegidas.
 
 ## Stack
 
-- Angular 20 (standalone components)
+- Angular 20 (standalone)
 - Ionic Framework 8
 - Capacitor 8
 - TypeScript 5
@@ -15,7 +15,7 @@ Aplicacion web/movil de **Liga de Aventureros de Vigo** construida con **Ionic 8
 
 - Node.js 20+
 - npm 10+
-- Ionic CLI (opcional, pero recomendado):
+- Ionic CLI (opcional)
 
 ```bash
 npm install -g @ionic/cli
@@ -27,72 +27,101 @@ npm install -g @ionic/cli
 npm install
 ```
 
-## Ejecutar en desarrollo
+## Desarrollo
 
 ```bash
 npm start
 ```
 
-El proyecto corre por defecto con configuracion de desarrollo (`ng serve`).
-
-Alternativamente, con Ionic CLI instalado:
+Alternativa con Ionic CLI:
 
 ```bash
 ionic serve
 ```
 
-## Scripts disponibles
+## Scripts
 
-- `npm start`: levanta servidor de desarrollo.
-- `npm run build`: genera build de produccion en `www/`.
-- `npm run watch`: build en modo watch para desarrollo.
-- `npm run test`: ejecuta tests con Karma/Jasmine.
-- `npm run lint`: ejecuta lint con Angular ESLint.
+- `npm start`: servidor de desarrollo.
+- `npm run build`: build de produccion.
+- `npm run watch`: build en modo watch.
+- `npm run test`: tests con Karma/Jasmine.
+- `npm run lint`: lint con Angular ESLint.
 
-## Build para produccion
+## Build
 
 ```bash
 npm run build
 ```
 
-Salida generada en:
-
-- `www/`
+Salida en `www/`.
 
 ## Configuracion de entorno
 
 Archivos:
 
-- `src/environments/environment.ts` (desarrollo)
-- `src/environments/environment.prod.ts` (produccion)
+- `src/environments/environment.ts`
+- `src/environments/environment.prod.ts`
 
 Variables principales:
 
-- `appName`: nombre mostrado en la app.
-- `version`: version de la app.
-- `api`: base URL del backend.
-- `kofi`: URL de Ko-fi.
+- `appName`
+- `version`
+- `api`
+- `kofi`
 
-## Arquitectura resumida
+## Autenticacion y roles
 
-Paginas:
+### Estado de usuario
 
-- `src/app/pages/tabs/`: layout principal con tab bar.
-- `src/app/pages/home/`: pagina de inicio.
+- `UserService` mantiene una lista de usuarios y un usuario activo.
+- El estado persistido se guarda en `users_state`.
+- `activeUid$` emite cambios del usuario activo.
 
-Componentes:
+### Cliente API
 
-- `src/app/components/app-menu/`: menu lateral (tema, cuentas, Ko-fi).
-- `src/app/components/login-modal/`: modal de inicio de sesion.
-- `src/app/components/kofi-support-card/`: banner de Ko-fi.
+- `ApiService` inyecta automaticamente el JWT del usuario activo en llamadas al backend interno (`/v1`) cuando no se pasa `Authorization` manual.
+- Si se especifica `Authorization` en la llamada, se respeta ese valor.
 
-Servicios:
+### Guards por rol
 
-- `src/app/services/api.service.ts`: cliente HTTP generico para backend.
-- `src/app/services/user.service.ts`: estado de usuarios/sesion en `localStorage`.
-- `src/app/services/theme.service.ts`: modo de tema (`system`, `light`, `dark`).
+- `AdminGuard`: acceso admin.
+- `MasterGuard`: acceso master (o admin, segun logica de `hasMasterAccess`).
 
-## Estructura del proyecto
+## Templates base de pagina
+
+Para evitar repetir logica de suscripcion/redireccion por cambios de usuario, hay templates reutilizables:
+
+- `AdminPageTemplate`
+- `MasterPageTemplate`
+- `PublicPageTemplate`
+
+Estas clases usan ciclo de vida de Ionic (`ionViewWillEnter` / `ionViewDidLeave`) para que la reaccion a `onUserChange` ocurra solo cuando la vista esta activa.
+
+Ejemplo de uso:
+
+```ts
+@Component({
+  standalone: true,
+  templateUrl: './example.page.html',
+})
+export class ExamplePage extends PublicPageTemplate {
+  constructor(userService: UserService) {
+    super(userService);
+  }
+
+  protected override onUserChange?(): void {
+    // logica al cambiar el usuario activo
+  }
+}
+```
+
+## Rutas actuales
+
+- `/tabs/home`: pagina publica principal.
+- `/tabs/admin`: pagina protegida por `AdminGuard`.
+- `/tabs/master`: pagina protegida por `MasterGuard`.
+
+## Estructura relevante
 
 ```text
 src/
@@ -101,24 +130,32 @@ src/
       app-menu/
       kofi-support-card/
       login-modal/
+    guards/
+      admin.guard.ts
+      master.guard.ts
     pages/
+      admin/
       home/
+      master/
       tabs/
     services/
       api.service.ts
+      storage.service.ts
       theme.service.ts
       user.service.ts
+    templates/
+      admin-page.template.ts
+      master-page.template.ts
+      public-page.template.ts
   environments/
   assets/
 ```
 
 ## Licencia
 
-Este software es **codigo abierto** y se distribuye bajo la licencia **GNU General Public License v3.0 (GPL-3.0)**.
+Este software se distribuye bajo licencia GNU GPL v3.0.
 
-Puedes usar, estudiar, modificar y redistribuir el codigo siempre que mantengas las condiciones de la GPL.
-
-Para el texto completo de la licencia y avisos de terceros, consulta:
+Consulta:
 
 - `LICENSE`
 - `ThirdPartyNotices`

@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { StorageService, USERS_STATE_STORAGE_KEY } from './storage.service';
 
 export type QueryParams = Record<string, string | number | boolean | null | undefined>;
 export type RequestHeaders = Record<string, string | string[]>;
@@ -13,6 +14,8 @@ export type UploadData = Record<string, string | number | boolean | null | undef
 })
 export class ApiService {
   private readonly baseUrl = `${environment.api.replace(/\/+$/, '')}/v1`;
+  private readonly storageKey = USERS_STATE_STORAGE_KEY;
+  private readonly storage = inject(StorageService);
 
   constructor(private readonly http: HttpClient) {}
 
@@ -21,9 +24,11 @@ export class ApiService {
     params?: QueryParams,
     headers?: RequestHeaders
   ): Observable<T> {
-    return this.http.get<T>(this.buildUrl(endpoint), {
+    const url = this.buildUrl(endpoint);
+
+    return this.http.get<T>(url, {
       params: this.toHttpParams(params),
-      headers: this.toHttpHeaders(headers),
+      headers: this.toHttpHeaders(this.resolveRequestHeaders(headers, url)),
     });
   }
 
@@ -33,9 +38,11 @@ export class ApiService {
     params?: QueryParams,
     headers?: RequestHeaders
   ): Observable<T> {
-    return this.http.post<T>(this.buildUrl(endpoint), body, {
+    const url = this.buildUrl(endpoint);
+
+    return this.http.post<T>(url, body, {
       params: this.toHttpParams(params),
-      headers: this.toHttpHeaders(headers),
+      headers: this.toHttpHeaders(this.resolveRequestHeaders(headers, url)),
     });
   }
 
@@ -60,10 +67,64 @@ export class ApiService {
       }
     }
 
-    return this.http.post<T>(this.buildUrl(endpoint), formData, {
+    const url = this.buildUrl(endpoint);
+
+    return this.http.post<T>(url, formData, {
       params: this.toHttpParams(params),
-      headers: this.toHttpHeaders(headers),
+      headers: this.toHttpHeaders(this.resolveRequestHeaders(headers, url)),
     });
+  }
+
+  private resolveRequestHeaders(headers: RequestHeaders | undefined, url: string): RequestHeaders | undefined {
+    if (!this.isInternalApiUrl(url) || this.hasAuthorizationHeader(headers)) {
+      return headers;
+    }
+
+    const jwt = this.getActiveUserJwt();
+    if (!jwt) {
+      return headers;
+    }
+
+    return {
+      ...(headers ?? {}),
+      Authorization: `Bearer ${jwt}`,
+    };
+  }
+
+  private isInternalApiUrl(url: string): boolean {
+    return url.startsWith(this.baseUrl);
+  }
+
+  private hasAuthorizationHeader(headers?: RequestHeaders): boolean {
+    if (!headers) {
+      return false;
+    }
+
+    return Object.keys(headers).some((key) => key.toLowerCase() === 'authorization');
+  }
+
+  private getActiveUserJwt(): string | null {
+    const parsed = this.storage.getJson<{
+      users?: Array<{ uid?: unknown; jwt?: unknown }>;
+      activeUid?: unknown;
+    }>(this.storageKey);
+
+    if (!parsed) {
+      return null;
+    }
+
+    const users = Array.isArray(parsed.users) ? parsed.users : [];
+    if (users.length === 0) {
+      return null;
+    }
+
+    const activeUid = typeof parsed.activeUid === 'string' ? parsed.activeUid : null;
+    const activeUser = activeUid
+      ? users.find((user) => typeof user.uid === 'string' && user.uid === activeUid)
+      : users[0];
+
+    const jwt = activeUser?.jwt;
+    return typeof jwt === 'string' && jwt.trim() ? jwt : null;
   }
 
   private buildUrl(endpoint: string): string {

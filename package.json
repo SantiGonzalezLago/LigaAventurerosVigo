@@ -5,8 +5,11 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
+    "prestart": "node scripts/sync-index-title.mjs development",
     "start": "ng serve",
+    "prebuild": "node scripts/sync-index-title.mjs production",
     "build": "ng build",
+    "prewatch": "node scripts/sync-index-title.mjs development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"

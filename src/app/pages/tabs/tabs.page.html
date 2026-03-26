@@ -2,8 +2,11 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button menu="main-menu"></ion-menu-button>
+      @if (currentBackLink) {
+        <ion-back-button [defaultHref]="currentBackLink"></ion-back-button>
+      }
     </ion-buttons>
-    <ion-title>{{ appName }}</ion-title>
+    <ion-title>{{ currentTitle }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -11,27 +14,27 @@
 
 <ion-tabs>
   <ion-tab-bar id="main-tab-bar" slot="bottom">
-    <ion-tab-button tab="home" href="/tabs/home">
+    <ion-tab-button tab="home" href="/">
       <ion-icon name="home-sharp"></ion-icon>
       <ion-label>Inicio</ion-label>
     </ion-tab-button>
 
     @if (canViewMasterTab()) {
-      <ion-tab-button tab="master" href="/tabs/master">
+      <ion-tab-button tab="master" href="/master">
         <ion-icon name="compass"></ion-icon>
         <ion-label>Master</ion-label>
       </ion-tab-button>
     }
 
     @if (canViewAdminTab()) {
-      <ion-tab-button tab="admin" href="/tabs/admin">
+      <ion-tab-button tab="admin" href="/admin">
         <ion-icon name="shield-checkmark"></ion-icon>
         <ion-label>Admin</ion-label>
       </ion-tab-button>
     }
 
     @if (isLoggedIn()) {
-      <ion-tab-button tab="profile" href="/tabs/profile">
+      <ion-tab-button tab="user" href="/user">
         @if (getActiveUserAvatar(); as userAvatar) {
           <span class="profile-tab-avatar" aria-hidden="true">
             <img [src]="userAvatar" alt="" />

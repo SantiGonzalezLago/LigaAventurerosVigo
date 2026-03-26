@@ -1,0 +1,68 @@
+.pagination-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.pagination-controls {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  white-space: nowrap;
+  text-align: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 8px;
+}
+
+.pagination-track {
+  display: inline-flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  width: max-content;
+  margin: 0 auto;
+}
+
+.page-btn {
+  padding: 8px 12px;
+  min-width: var(--touch-target-min-size);
+  min-height: var(--touch-target-min-size);
+  /* Keep buttons from shrinking when the row scrolls */
+  flex: 0 0 auto;
+  display: inline-block;
+  font-size: 0.95rem;
+  border: 1px solid var(--ion-color-medium);
+  color: var(--ion-color-medium);
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.page-btn.active {
+  background: var(--ion-color-primary);
+  border-color: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+}
+
+.pagination-summary {
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+}
+
+/* Mobile adjustments: slightly bigger buttons and spacing */
+@media (max-width: 480px) {
+  .pagination-controls {
+    gap: 10px;
+  }
+
+  .page-btn {
+    padding: 10px 14px;
+    min-width: 48px;
+    min-height: 48px;
+    font-size: 1rem;
+    border-radius: 6px;
+  }
+}

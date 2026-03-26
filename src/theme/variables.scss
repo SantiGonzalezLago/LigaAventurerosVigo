@@ -1,2 +1,13 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
+
+:root {
+	--touch-target-min-size: 44px;
+
+	--ion-color-admin: #4d8dff;
+	--ion-color-admin-rgb: 77,141,255;
+  --ion-color-admin-contrast: #000000;
+  --ion-color-admin-contrast-rgb: 0,0,0;
+  --ion-color-admin-shade: #447ce0;
+  --ion-color-admin-tint: #5f98ff;
+}

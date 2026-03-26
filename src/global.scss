@@ -58,8 +58,8 @@ ion-button::part(native) {
 }
 
 .round-button::part(native) {
-	width: 32px;
-	height: 32px;
+	width: var(--touch-target-min-size);
+	height: var(--touch-target-min-size);
 	border-radius: 999px;
 	padding: 0;
 }

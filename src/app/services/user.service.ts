@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, catchError, map, Observable, of, take } from 'rxjs';
+import { BehaviorSubject, catchError, distinctUntilChanged, map, Observable, of, take } from 'rxjs';
 import { ApiService } from './api.service';
+import { StorageService, USERS_STATE_STORAGE_KEY } from './storage.service';
 
 export interface UserData {
   uid: string;
@@ -29,13 +30,14 @@ export interface LoginResult {
 })
 export class UserService {
   private readonly api = inject(ApiService);
-  private readonly storageKey = 'users_state';
+  private readonly storage = inject(StorageService);
+  private readonly storageKey = USERS_STATE_STORAGE_KEY;
   private readonly usersSubject = new BehaviorSubject<UserData[]>([]);
   private readonly activeUidSubject = new BehaviorSubject<string | null>(null);
   private googleClientId: string | null = null;
 
   public readonly users$ = this.usersSubject.asObservable();
-  public readonly activeUid$ = this.activeUidSubject.asObservable();
+  public readonly activeUid$ = this.activeUidSubject.asObservable().pipe(distinctUntilChanged());
 
   constructor() {
     this.loadFromStorage();
@@ -118,11 +120,7 @@ export class UserService {
       return of(undefined);
     }
 
-    return this.api.get<{ message: string; user: UserData }>(
-      'me',
-      undefined,
-      { Authorization: `Bearer ${user.jwt}` }
-    ).pipe(
+    return this.api.get<{ message: string; user: UserData }>('me').pipe(
       map((response) => {
         if (this.isValidUser(response.user)) {
           this.saveUser(response.user);
@@ -241,26 +239,21 @@ export class UserService {
   }
 
   private loadFromStorage(): void {
-    const raw = localStorage.getItem(this.storageKey);
-    if (!raw) {
+    const parsed = this.storage.getJson<Partial<UserState>>(this.storageKey);
+    if (!parsed) {
       return;
     }
 
-    try {
-      const parsed = JSON.parse(raw) as Partial<UserState>;
-      const users = Array.isArray(parsed.users)
-        ? parsed.users.filter((user): user is UserData => this.isValidUser(user))
-        : [];
+    const users = Array.isArray(parsed.users)
+      ? parsed.users.filter((user): user is UserData => this.isValidUser(user))
+      : [];
 
-      const activeUid =
-        typeof parsed.activeUid === 'string' && users.some((user) => user.uid === parsed.activeUid)
-          ? parsed.activeUid
-          : users[0]?.uid ?? null;
+    const activeUid =
+      typeof parsed.activeUid === 'string' && users.some((user) => user.uid === parsed.activeUid)
+        ? parsed.activeUid
+        : users[0]?.uid ?? null;
 
-      this.updateState(users, activeUid);
-    } catch {
-      this.updateState([], null);
-    }
+    this.updateState(users, activeUid);
   }
 
   private updateState(users: UserData[], activeUid: string | null): void {
@@ -273,7 +266,7 @@ export class UserService {
 
     this.usersSubject.next(orderedUsers);
     this.activeUidSubject.next(validActiveUid);
-    localStorage.setItem(this.storageKey, JSON.stringify(state));
+    this.storage.setJson(this.storageKey, state);
   }
 
   private orderUsersByLastActive(users: UserData[], activeUid: string | null): UserData[] {

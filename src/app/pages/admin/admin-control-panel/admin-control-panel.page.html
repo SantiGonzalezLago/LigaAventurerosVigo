@@ -1,0 +1,22 @@
+<ion-content class="page-content" fullscreen>
+  <div class="actions-wrapper">
+    <div class="actions" role="list" aria-label="Opciones de administracion">
+
+      <button
+        type="button"
+        role="listitem"
+        class="action-button"
+        routerLink="/admin/users"
+        routerDirection="forward"
+      >
+        <span class="action-button-label">Gestion de usuarios</span>
+        <span class="action-button-badges">
+          <span class="badge badge-success">{{ users.confirmed }}</span>
+          <span class="badge badge-warning">{{ users.unconfirmed }}</span>
+          <span class="badge badge-danger">{{ users.banned }}</span>
+        </span>
+      </button>
+
+    </div>
+  </div>
+</ion-content>

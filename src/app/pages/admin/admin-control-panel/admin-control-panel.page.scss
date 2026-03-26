@@ -1,0 +1,76 @@
+.actions-wrapper {
+	min-height: 100%;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.actions {
+	width: min(420px, 100%);
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.action-button {
+	width: 100%;
+	min-height: 52px;
+	border: 1px solid var(--ion-color-primary);
+	border-radius: 12px;
+	background: var(--ion-color-primary);
+	color: var(--ion-color-primary-contrast);
+	font-size: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.action-button:focus-visible {
+	outline: 3px solid color-mix(in srgb, var(--ion-color-primary), white 45%);
+	outline-offset: 2px;
+}
+
+.action-button:hover {
+	filter: brightness(1.05);
+}
+
+.action-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+.action-button-badges {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-shrink: 0;
+}
+
+.badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 22px;
+	height: 22px;
+	padding: 0 7px;
+	border-radius: 5px;
+	font-size: 0.75rem;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.badge-success {
+	background: var(--ion-color-success);
+	color: var(--ion-color-success-contrast);
+}
+
+.badge-warning {
+	background: var(--ion-color-warning);
+	color: var(--ion-color-warning-contrast);
+}
+
+.badge-danger {
+	background: var(--ion-color-danger);
+	color: var(--ion-color-danger-contrast);
+}

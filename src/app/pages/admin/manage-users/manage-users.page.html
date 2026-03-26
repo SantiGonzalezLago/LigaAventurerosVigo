@@ -1,0 +1,133 @@
+<ion-content class="page-content manage-users-page">
+  @if (state$ | async; as state) {
+    @if (state.loading) {
+    <app-loader></app-loader>
+    }
+    <!-- Search Bar -->
+    <div class="search-container">
+      <ion-searchbar
+        [(ngModel)]="searchDraft"
+        (ionInput)="onSearchInput($event)"
+        placeholder="Buscar usuarios..."
+      ></ion-searchbar>
+    </div>
+
+    <!-- Error State -->
+    @if (state.error && state.users.length === 0) {
+      <div class="error-container">
+        <ion-icon name="alert-circle" class="error-icon"></ion-icon>
+        <h3>Error</h3>
+        <p>{{ state.error }}</p>
+        <button class="retry-button" (click)="retry()">Reintentar</button>
+      </div>
+    }
+
+    <!-- Table -->
+    @if (state.users.length > 0) {
+      <div class="table-wrapper">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th class="avatar-col"></th>
+              <th class="name-col sortable" (click)="onSort('name')">
+                Nombre
+                @if (isSorted('name')) {
+                  <span class="sort-indicator">{{ getSortIcon('name') }}</span>
+                }
+              </th>
+              <th class="master-col sortable" (click)="onSort('master')" title="Master">
+                <ion-icon name="compass"></ion-icon>
+                @if (isSorted('master')) {
+                  <span class="sort-indicator">{{ getSortIcon('master') }}</span>
+                }
+              </th>
+              <th class="admin-col sortable" (click)="onSort('admin')" title="Admin">
+                <ion-icon name="shield-checkmark"></ion-icon>
+                @if (isSorted('admin')) {
+                  <span class="sort-indicator">{{ getSortIcon('admin') }}</span>
+                }
+              </th>
+              <th class="date-col sortable" (click)="onSort('date_created')">
+                Registro
+                @if (isSorted('date_created')) {
+                  <span class="sort-indicator">{{ getSortIcon('date_created') }}</span>
+                }
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of state.users; track user.uid) {
+              <tr class="user-row" [class.banned]="user.banned">
+                <td class="avatar-cell">
+                  @if (user.avatar) {
+                    <img
+                      class="avatar-img"
+                      [src]="user.avatar"
+                      [alt]="'Avatar de ' + user.name"
+                    />
+                  } @else {
+                    <span class="avatar-fallback">{{ getAvatarInitial(user.name) }}</span>
+                  }
+                </td>
+                <td class="name-cell">
+                  <div class="name-content">
+                    <strong>{{ user.name }}</strong>
+                    @if (!user.verified) {
+                      <ion-icon
+                        name="alert-circle-outline"
+                        class="unverified-icon"
+                        title="Sin verificar"
+                      ></ion-icon>
+                    }
+                  </div>
+                </td>
+                <td class="master-cell">
+                  <ion-icon
+                    [class.inactive]="!user.master"
+                    class="role-icon role-icon-master"
+                    name="compass"
+                    title="Master"
+                  ></ion-icon>
+                </td>
+                <td class="admin-cell">
+                  <ion-icon
+                    [class.inactive]="!user.admin"
+                    class="role-icon role-icon-admin"
+                    name="shield-checkmark"
+                    title="Admin"
+                  ></ion-icon>
+                </td>
+                <td class="date-cell">
+                  {{ user.date_created | date : 'dd/MM/yyyy' : '' : 'es' }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalPages]="state.pagination.total_pages"
+        [total]="state.pagination.total"
+        [itemsCount]="state.users.length"
+        (pageChange)="goToPage($event)"
+      ></app-pagination>
+    }
+
+    <!-- Empty State -->
+    @if (!state.loading && !state.error && state.users.length === 0) {
+      <div class="empty-container">
+        <ion-icon name="search" class="empty-icon"></ion-icon>
+        <h3>Sin resultados</h3>
+        <p>
+          @if (searchQuery) {
+            No se encontraron usuarios que coincidan con tu búsqueda.
+          } @else {
+            No hay usuarios disponibles.
+          }
+        </p>
+      </div>
+    }
+  }
+</ion-content>

@@ -1,9 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AppMenuComponent } from './components/app-menu/app-menu.component';
 import { LoginModalComponent } from './components/login-modal/login-modal.component';
-import { environment } from '../environments/environment';
 import { ThemeService } from './services/theme.service';
 
 interface LoginModalRequester {
@@ -17,13 +15,11 @@ interface LoginModalRequester {
 })
 export class AppComponent {
   private themeService = inject(ThemeService);
-  private title = inject(Title);
   public isLoginModalOpen = false;
   public readonly loginModalOpener = () => this.openLoginModal();
 
   constructor() {
     void this.themeService;
-    this.title.setTitle(environment.appName);
   }
 
   public openLoginModal(): void {

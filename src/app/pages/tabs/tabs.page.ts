@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import {
+  IonBackButton,
   IonButtons,
   IonHeader,
   IonIcon,
@@ -20,14 +21,16 @@ import {
   personCircle,
   shieldCheckmark,
 } from 'ionicons/icons';
-import { UserService } from '../../services/user.service';
 import { environment } from '../../../environments/environment';
+import { PageHeaderService } from '../../services/page-header.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
   imports: [
+    IonBackButton,
     IonButtons,
     IonHeader,
     IonIcon,
@@ -43,7 +46,10 @@ import { environment } from '../../../environments/environment';
 })
 export class TabsPage {
   userService = inject(UserService);
-  appName = environment.appName;
+  private readonly pageHeaderService = inject(PageHeaderService);
+  private readonly appName = environment.appName;
+  public currentTitle = this.appName;
+  public currentBackLink: string | null = null;
   private loginModalOpener: (() => void) | null = null;
 
   constructor() {
@@ -53,6 +59,14 @@ export class TabsPage {
       logIn,
       shieldCheckmark,
       personCircle,
+    });
+
+    this.pageHeaderService.title$.subscribe((title) => {
+      this.currentTitle = title ?? this.appName;
+    });
+
+    this.pageHeaderService.backLink$.subscribe((backLink) => {
+      this.currentBackLink = backLink;
     });
   }
 
