@@ -1,0 +1,90 @@
+@if (isLoading) {
+  <app-loader></app-loader>
+}
+
+<ion-modal class="user-detail-modal" [isOpen]="isOpen" (didDismiss)="onDidDismiss()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>
+          <div class="title-user">
+            @if (user?.avatar) {
+              <img
+                class="title-avatar"
+                [src]="user.avatar"
+                [alt]="'Avatar de ' + (user?.name || 'Usuario')"
+              />
+            } @else {
+              <span class="title-avatar title-avatar-fallback">{{ (user?.name || 'Usuario').charAt(0).toUpperCase() }}</span>
+            }
+            <span class="title-name">{{ user?.name || 'Usuario' }}</span>
+          </div>
+        </ion-title>
+        <ion-buttons slot="end">
+          <ion-button class="round-button" fill="clear" aria-label="Cerrar" (click)="closeModal()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <div class="modal-body ion-padding">
+      @if (user) {
+        <div class="user-info">
+          <div class="uid-text">{{ user.uid }}</div>
+          <div><i>Registrado el {{ user.date_created | date : "dd/MM/yyyy 'a las' HH:mm" : '' : 'es' }}</i></div>
+          @if (!user.verified) {
+            <div class="unverified-note">
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              Usuario sin verificar
+            </div>
+          }
+
+          <div class="role-toggle-row">
+            <ion-button
+              class="role-toggle-btn role-toggle-btn-admin"
+              [class.inactive]="!user.admin"
+              fill="solid"
+              (click)="toggleAdmin()"
+              [disabled]="!user.verified || user.banned || isRequestedUserActive || isTogglingAdmin || isTogglingMaster"
+            >
+              Administrador
+            </ion-button>
+
+            <ion-button
+              class="role-toggle-btn role-toggle-btn-master"
+              [class.inactive]="!user.master"
+              fill="solid"
+              (click)="toggleMaster()"
+              [disabled]="!user.verified || user.banned || isTogglingMaster || isTogglingAdmin"
+            >
+              Master
+            </ion-button>
+            @if (!user.verified) {
+              <div class="role-note">
+                El usuario debe ser verificado primero
+              </div>
+            } @else if (user.banned) {
+              <div class="role-note">
+                No se pueden asignar roles a un usuario baneado
+              </div>
+            }
+          </div>
+        </div>
+
+        @if (isRequestedUserActive) {
+          <p class="active-user-note">Este es tu usuario activo</p>
+        } @else {
+          <ion-button
+            class="impersonate-button"
+            color="danger"
+            (click)="impersonateUser()"
+            [disabled]="user.banned || user.admin"
+          >
+            Suplantar usuario
+          </ion-button>
+        }
+      }
+    </div>
+  </ng-template>
+</ion-modal>

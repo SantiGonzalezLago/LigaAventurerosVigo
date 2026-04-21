@@ -164,6 +164,7 @@
     tbody tr {
       border-bottom: 1px solid rgba(var(--ion-color-medium-rgb), 0.1);
       transition: background 0.15s ease;
+      cursor: pointer;
 
       &.banned {
         color: var(--ion-color-danger);

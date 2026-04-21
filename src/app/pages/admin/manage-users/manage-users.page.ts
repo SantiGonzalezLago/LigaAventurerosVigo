@@ -15,6 +15,7 @@ import { ApiService } from '../../../services/api.service';
 import { PageHeaderService } from '../../../services/page-header.service';
 import { PaginationComponent } from '../../../components/pagination/pagination.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
+import { UserDetailModalComponent } from './user-detail-modal/user-detail-modal.component';
 
 addIcons({ compass, shieldCheckmark, alertCircleOutline, searchOutline });
 
@@ -34,6 +35,7 @@ addIcons({ compass, shieldCheckmark, alertCircleOutline });
     IonIcon,
     PaginationComponent,
     LoaderComponent,
+    UserDetailModalComponent,
   ],
   templateUrl: './manage-users.page.html',
   styleUrls: ['./manage-users.page.scss'],
@@ -65,6 +67,8 @@ export class ManageUsersPage extends AdminPageTemplate implements OnInit {
   public sortDir: 'asc' | 'desc' = 'desc';
   public currentPage = 1;
   public perPage = 20;
+  public userModalRequest: { uid: string; eventId: number } | null = null;
+  private userModalEventId = 0;
 
   public get state(): any {
     return this.stateSubject.value;
@@ -128,6 +132,39 @@ export class ManageUsersPage extends AdminPageTemplate implements OnInit {
   public retry(): void {
     this.currentPage = 1;
     this.loadUsers();
+  }
+
+  public openUserModal(uid: string): void {
+    this.userModalEventId += 1;
+    this.userModalRequest = {
+      uid,
+      eventId: this.userModalEventId,
+    };
+  }
+
+  public closeUserModal(): void {
+    this.userModalRequest = null;
+  }
+
+  public onUserRoleChange(update: { uid: string; admin?: boolean; master?: boolean }): void {
+    if (!update?.uid) {
+      return;
+    }
+
+    const users = Array.isArray(this.state.users) ? this.state.users : [];
+    const updatedUsers = users.map((user: any) => {
+      if (user.uid !== update.uid) {
+        return user;
+      }
+
+      return {
+        ...user,
+        ...(typeof update.admin === 'boolean' ? { admin: update.admin } : {}),
+        ...(typeof update.master === 'boolean' ? { master: update.master } : {}),
+      };
+    });
+
+    this.updateState({ users: updatedUsers });
   }
 
   private loadUsers(onComplete?: () => void): void {

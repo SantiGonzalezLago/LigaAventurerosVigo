@@ -1,0 +1,94 @@
+.user-detail-modal ion-toolbar ion-buttons[slot='end'] {
+  margin-inline-end: 8px;
+}
+
+.user-detail-modal ion-title .title-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-detail-modal ion-title .title-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.user-detail-modal ion-title .title-avatar-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--ion-color-medium-rgb), 0.2);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.user-detail-modal ion-title .title-name {
+  padding-left: 8px;
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-detail-modal {
+  --width: min(92vw, 420px);
+  --height: auto;
+  --border-radius: 14px;
+}
+
+.user-info {
+  margin-bottom: 1em;
+}
+
+.uid-text {
+  color: var(--ion-color-medium-shade);
+  opacity: 0.9;
+  font-size: 75%;
+}
+
+.role-toggle-row {
+  margin-top: 1em;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.role-toggle-btn-admin {
+  --background: var(--ion-color-admin);
+  --color: var(--ion-color-admin-contrast);
+}
+
+.role-toggle-btn-master {
+  --background: var(--ion-color-warning);
+  --color: var(--ion-color-warning-contrast);
+}
+
+.role-toggle-btn.inactive {
+  --background: var(--ion-color-medium);
+  --color: var(--ion-color-medium-contrast);
+}
+
+.role-note {
+  margin-top: -0.5em;
+  color: var(--ion-color-medium-shade);
+  font-size: 75%;
+}
+
+.unverified-note {
+  color: var(--ion-color-warning);
+  font-size: 0.9rem;
+}
+
+.active-user-note {
+  margin: 0;
+  color: var(--ion-color-medium-shade);
+  font-size: 0.92rem;
+}
+
+.impersonate-button {
+  margin-top: 8px;
+}

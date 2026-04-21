@@ -218,6 +218,38 @@ export class UserService {
     );
   }
 
+  public loginAdmin(uid: string): Observable<LoginResult> {
+    const normalizedUid = uid.trim();
+    if (!normalizedUid) {
+      return of({
+        success: false,
+        message: 'El uid es obligatorio',
+      });
+    }
+
+    return this.api.post<{ message: string; user: UserData }, { uid: string }>(
+      'login/admin',
+      { uid: normalizedUid }
+    ).pipe(
+      map((response) => {
+        if (!this.isValidUser(response.user)) {
+          return {
+            success: false,
+            message: 'Respuesta de usuario inválida',
+          };
+        }
+
+        this.saveUser(response.user, true);
+
+        return { success: true };
+      }),
+      catchError((error: unknown) => of({
+        success: false,
+        message: this.extractErrorMessage(error),
+      }))
+    );
+  }
+
   public logout(uid?: string): void {
     const targetUid = uid ?? this.activeUidSubject.value;
     if (!targetUid) {
@@ -228,6 +260,10 @@ export class UserService {
     const activeUid = this.activeUidSubject.value === targetUid ? users[0]?.uid ?? null : this.activeUidSubject.value;
 
     this.updateState(users, activeUid);
+
+    if (activeUid) {
+      this.refreshUser(activeUid).pipe(take(1)).subscribe();
+    }
   }
 
   public clearActiveUser(): void {

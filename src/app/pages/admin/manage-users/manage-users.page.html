@@ -57,7 +57,7 @@
           </thead>
           <tbody>
             @for (user of state.users; track user.uid) {
-              <tr class="user-row" [class.banned]="user.banned">
+              <tr class="user-row" [class.banned]="user.banned" (click)="openUserModal(user.uid)">
                 <td class="avatar-cell">
                   @if (user.avatar) {
                     <img
@@ -105,6 +105,12 @@
           </tbody>
         </table>
       </div>
+
+      <app-user-detail-modal
+        [openRequest]="userModalRequest"
+        (userRoleChange)="onUserRoleChange($event)"
+        (close)="closeUserModal()"
+      ></app-user-detail-modal>
 
       <app-pagination
         [currentPage]="currentPage"
