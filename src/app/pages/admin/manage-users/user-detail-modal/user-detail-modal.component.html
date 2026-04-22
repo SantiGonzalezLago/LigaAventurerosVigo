@@ -84,6 +84,154 @@
             Suplantar usuario
           </ion-button>
         }
+
+        @if (!isRequestedUserActive) {
+        <details class="ban-create-dropdown">
+          <summary>
+            <span class="ban-summary-title">Bloquear usuario</span>
+            @if (user.banned) {
+              <button
+                class="unban-inline-button"
+                type="button"
+                (click)="confirmUnban($event)"
+                [disabled]="isUnbanning"
+              >
+                @if (isUnbanning) {
+                  Desbloqueando...
+                } @else {
+                  Desbloquear
+                }
+              </button>
+            }
+          </summary>
+
+          <div class="ban-form-body">
+            <div class="ban-permanent-field">
+              <span>Permanente</span>
+              <ion-toggle
+                [checked]="banPermanent"
+                (ionChange)="onBanPermanentChange($event)"
+                [disabled]="isCreatingBan || isUnbanning || isRequestedUserActive || user.banned"
+              ></ion-toggle>
+            </div>
+
+            @if (!banPermanent) {
+              <label class="ban-input-label" for="ban-date-end">Fecha fin</label>
+              <input
+                id="ban-date-end"
+                class="ban-input"
+                type="date"
+                [value]="banDateEnd"
+                (input)="onBanDateEndChange($event)"
+                [disabled]="isCreatingBan || isUnbanning || isRequestedUserActive || user.banned"
+              />
+              <div class="ban-date-adjustments">
+                <button
+                  type="button"
+                  class="ban-date-adjust-btn"
+                  (click)="adjustBanDateEnd(-1, 'week')"
+                  [disabled]="isCreatingBan || isUnbanning || isRequestedUserActive || user.banned"
+                >
+                  -1 semana
+                </button>
+                <button
+                  type="button"
+                  class="ban-date-adjust-btn"
+                  (click)="adjustBanDateEnd(1, 'week')"
+                  [disabled]="isCreatingBan || isUnbanning || isRequestedUserActive || user.banned"
+                >
+                  +1 semana
+                </button>
+                <button
+                  type="button"
+                  class="ban-date-adjust-btn"
+                  (click)="adjustBanDateEnd(-1, 'month')"
+                  [disabled]="isCreatingBan || isUnbanning || isRequestedUserActive || user.banned"
+                >
+                  -1 mes
+                </button>
+                <button
+                  type="button"
+                  class="ban-date-adjust-btn"
+                  (click)="adjustBanDateEnd(1, 'month')"
+                  [disabled]="isCreatingBan || isUnbanning || isRequestedUserActive || user.banned"
+                >
+                  +1 mes
+                </button>
+              </div>
+            }
+
+            <label class="ban-input-label" for="ban-reason">Motivo</label>
+            <textarea
+              id="ban-reason"
+              class="ban-textarea"
+              rows="3"
+              placeholder="Escribe el motivo del ban"
+              [value]="banReason"
+              (input)="onBanReasonChange($event)"
+              [disabled]="isCreatingBan || isUnbanning || isRequestedUserActive || user.banned"
+            ></textarea>
+
+            @if (user.banned) {
+              <p class="ban-form-note">Este usuario ya tiene un ban activo.</p>
+            }
+
+            @if (banFormError) {
+              <p class="ban-form-error">{{ banFormError }}</p>
+            }
+
+            <ion-button
+              class="ban-submit-button"
+              color="danger"
+              (click)="createBan()"
+              [disabled]="isCreatingBan || isUnbanning || isRequestedUserActive || user.banned"
+            >
+              @if (isCreatingBan) {
+                Bloqueando...
+              } @else {
+                Confirmar
+              }
+            </ion-button>
+          </div>
+        </details>
+        }
+
+        <details class="bans-dropdown">
+          <summary>
+            Historial de bloqueos
+            @if (bans.length > 0) {
+              <span class="bans-count">({{ bans.length }})</span>
+            }
+          </summary>
+
+          @if (bans.length > 0) {
+            <div class="bans-table-wrapper">
+              <table class="bans-table">
+                <thead>
+                  <tr>
+                    <th>Fechas</th>
+                    <th>Responsable</th>
+                    <th>Motivo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (ban of bans; track ban.id) {
+                    <tr [class.active-ban-row]="ban.active">
+                      <td class="ban-dates-cell">
+                        <div>{{ ban.date_start | date : 'dd/MM/yyyy' : '' : 'es' }}</div>
+                        <div class="ban-end-date">{{ getBanEndLabel(ban) }}</div>
+                      </td>
+                      <td>{{ getBanResponsible(ban) }}</td>
+                      <td>{{ ban.reason || '-' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <p class="bans-empty">Este usuario no tiene bans registrados.</p>
+          }
+        </details>
       }
     </div>
   </ng-template>

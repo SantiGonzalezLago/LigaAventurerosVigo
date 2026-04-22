@@ -9,8 +9,9 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
+  IonToggle,
 } from '@ionic/angular/standalone';
-import { ToastController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
 import { firstValueFrom, take } from 'rxjs';
@@ -31,6 +32,7 @@ addIcons({ closeOutline });
     IonButtons,
     IonButton,
     IonIcon,
+    IonToggle,
     LoaderComponent,
     DatePipe,
   ],
@@ -40,10 +42,11 @@ addIcons({ closeOutline });
 export class UserDetailModalComponent {
   private readonly api = inject(ApiService);
   private readonly userService = inject(UserService);
+  private readonly alertController = inject(AlertController);
   private readonly toastController = inject(ToastController);
   @Input() openRequest: { uid: string; eventId: number } | null = null;
   @Output() close = new EventEmitter<void>();
-  @Output() userRoleChange = new EventEmitter<{ uid: string; admin?: boolean; master?: boolean }>();
+  @Output() userRoleChange = new EventEmitter<{ uid: string; admin?: boolean; master?: boolean; banned?: boolean }>();
   @ViewChild(IonModal) private modal?: IonModal;
 
   public isOpen = false;
@@ -51,10 +54,16 @@ export class UserDetailModalComponent {
   public isRequestedUserActive = false;
   public isTogglingAdmin = false;
   public isTogglingMaster = false;
+  public isCreatingBan = false;
+  public isUnbanning = false;
 
   public uid = '';
   public user: any = null;
   public bans: any[] = [];
+  public banPermanent = true;
+  public banDateEnd = '';
+  public banReason = '';
+  public banFormError = '';
 
   private requestSequence = 0;
   private hasEmittedClose = false;
@@ -78,9 +87,8 @@ export class UserDetailModalComponent {
     this.uid = uid;
     this.user = null;
     this.bans = [];
+    this.resetBanForm();
     this.hasEmittedClose = false;
-
-    console.log('User UID:', uid);
 
     try {
       const response = await this.prepareUserData(uid);
@@ -90,7 +98,7 @@ export class UserDetailModalComponent {
       }
 
       this.user = response.user;
-      this.bans = response.user.bans;
+      this.bans = Array.isArray(response?.bans) ? response.bans : [];
 
       this.isOpen = true;
     } catch (error: unknown) {
@@ -283,11 +291,204 @@ export class UserDetailModalComponent {
       });
   }
 
+  public onBanPermanentChange(event: CustomEvent<{ checked: boolean }>): void {
+    const checked = event.detail?.checked ?? false;
+    this.banPermanent = checked;
+    this.banFormError = '';
+
+    if (checked) {
+      this.banDateEnd = '';
+    }
+  }
+
+  public onBanDateEndChange(event: Event): void {
+    this.banDateEnd = (event.target as HTMLInputElement | null)?.value ?? '';
+    this.banFormError = '';
+  }
+
+  public adjustBanDateEnd(direction: 1 | -1, unit: 'week' | 'month'): void {
+    const disabled = this.isCreatingBan || this.isUnbanning || this.isRequestedUserActive || this.user?.banned;
+    if (disabled) {
+      return;
+    }
+
+    const baseDate = this.banDateEnd ? new Date(this.banDateEnd) : new Date();
+    if (Number.isNaN(baseDate.getTime())) {
+      return;
+    }
+
+    const nextDate = new Date(baseDate);
+
+    if (unit === 'week') {
+      nextDate.setDate(nextDate.getDate() + (7 * direction));
+    } else {
+      const day = nextDate.getDate();
+      nextDate.setDate(1);
+      nextDate.setMonth(nextDate.getMonth() + direction);
+      const lastDay = new Date(nextDate.getFullYear(), nextDate.getMonth() + 1, 0).getDate();
+      nextDate.setDate(Math.min(day, lastDay));
+    }
+
+    this.banDateEnd = this.toInputDate(nextDate);
+    this.banFormError = '';
+  }
+
+  public onBanReasonChange(event: Event): void {
+    this.banReason = (event.target as HTMLTextAreaElement | null)?.value ?? '';
+    this.banFormError = '';
+  }
+
+  public createBan(): void {
+    if (!this.user || this.isCreatingBan || this.isRequestedUserActive) {
+      return;
+    }
+
+    if (this.user.banned) {
+      this.banFormError = 'El usuario ya tiene un ban activo';
+      return;
+    }
+
+    const reason = this.banReason.trim();
+    if (!reason) {
+      this.banFormError = 'Debes indicar un motivo para el ban';
+      return;
+    }
+
+    let dateEnd: string | null = null;
+    if (!this.banPermanent) {
+      if (!this.banDateEnd) {
+        this.banFormError = 'Debes indicar una fecha fin para un ban temporal';
+        return;
+      }
+
+      const parsedDate = new Date(this.banDateEnd);
+      if (Number.isNaN(parsedDate.getTime())) {
+        this.banFormError = 'La fecha fin no es valida';
+        return;
+      }
+
+      dateEnd = this.banDateEnd;
+    }
+
+    this.banFormError = '';
+    this.isCreatingBan = true;
+
+    this.api
+      .post<
+        { message: string; ban: { uid: string; reason: string; permanent: boolean; date_start: string; date_end: string | null } },
+        { uid: string; permanent: number; date_end: string | null; reason: string }
+      >('admin/ban-user', {
+        uid: this.uid,
+        permanent: this.banPermanent ? 1 : 0,
+        date_end: dateEnd,
+        reason,
+      })
+      .pipe(take(1))
+      .subscribe({
+        next: async () => {
+          this.user.banned = true;
+          this.userRoleChange.emit({
+            uid: this.uid,
+            banned: true,
+          });
+          this.resetBanForm();
+          await this.reloadCurrentUserData();
+          await this.showSuccessToast('Usuario baneado correctamente');
+        },
+        error: async (error: unknown) => {
+          const httpError = error instanceof HttpErrorResponse ? error : null;
+          if (httpError?.status === 401) {
+            this.userService.logout();
+          }
+
+          this.banFormError = this.getToggleErrorMessage(error, 'No se pudo banear al usuario');
+          await this.showErrorToast(this.banFormError);
+          this.isCreatingBan = false;
+        },
+        complete: () => {
+          this.isCreatingBan = false;
+        },
+      });
+  }
+
+  public async confirmUnban(event: Event): Promise<void> {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!this.user || !this.user.banned || this.isUnbanning) {
+      return;
+    }
+
+    const alert = await this.alertController.create({
+      header: 'Confirmar desbloqueo',
+      message: 'Esta accion quitara el bloqueo activo del usuario. Deseas continuar?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Desbloquear',
+          role: 'destructive',
+          handler: () => {
+            this.unbanUser();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  private unbanUser(): void {
+    if (!this.uid || this.isUnbanning) {
+      return;
+    }
+
+    this.isUnbanning = true;
+    this.banFormError = '';
+
+    this.api
+      .get<{ message: string; uid: string; lifted: number }>(`admin/unban/${encodeURIComponent(this.uid)}`)
+      .pipe(take(1))
+      .subscribe({
+        next: async () => {
+          if (this.user) {
+            this.user.banned = false;
+          }
+          this.userRoleChange.emit({
+            uid: this.uid,
+            banned: false,
+          });
+          await this.reloadCurrentUserData();
+          await this.showSuccessToast('Usuario desbloqueado correctamente');
+        },
+        error: async (error: unknown) => {
+          const httpError = error instanceof HttpErrorResponse ? error : null;
+
+          if (httpError?.status === 401) {
+            this.userService.logout();
+          }
+
+          const message = this.getToggleErrorMessage(error, 'No se pudo desbloquear al usuario');
+          this.banFormError = message;
+          await this.showErrorToast(message);
+          this.isUnbanning = false;
+        },
+        complete: () => {
+          this.isUnbanning = false;
+        },
+      });
+  }
+
   public async closeModal(): Promise<void> {
     this.isOpen = false;
     this.isLoading = false;
     this.isTogglingAdmin = false;
     this.isTogglingMaster = false;
+    this.isCreatingBan = false;
+    this.isUnbanning = false;
+    this.resetBanForm();
 
     if (this.modal) {
       await this.modal.dismiss(undefined, 'close').catch(() => undefined);
@@ -309,5 +510,63 @@ export class UserDetailModalComponent {
 
     this.hasEmittedClose = true;
     this.close.emit();
+  }
+
+  private resetBanForm(): void {
+    this.banPermanent = true;
+    this.banDateEnd = '';
+    this.banReason = '';
+    this.banFormError = '';
+  }
+
+  private async reloadCurrentUserData(): Promise<void> {
+    if (!this.uid) {
+      return;
+    }
+
+    const response = await this.prepareUserData(this.uid);
+    this.user = response.user;
+    this.bans = Array.isArray(response?.bans) ? response.bans : [];
+  }
+
+  public getBanEndLabel(ban: any): string {
+    if (ban?.permanent) {
+      return 'Permanente';
+    }
+
+    return ban?.date_end ? this.formatDate(ban.date_end) : '-';
+  }
+
+  public getBanResponsible(ban: any): string {
+    if (typeof ban?.banned_by_name === 'string' && ban.banned_by_name.trim()) {
+      return ban.banned_by_name;
+    }
+
+    return 'Sin responsable';
+  }
+
+  private formatDate(value: string): string {
+    if (!value) {
+      return '-';
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return '-';
+    }
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+
+  private toInputDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 }

@@ -146,7 +146,7 @@ export class ManageUsersPage extends AdminPageTemplate implements OnInit {
     this.userModalRequest = null;
   }
 
-  public onUserRoleChange(update: { uid: string; admin?: boolean; master?: boolean }): void {
+  public onUserRoleChange(update: { uid: string; admin?: boolean; master?: boolean; banned?: boolean }): void {
     if (!update?.uid) {
       return;
     }
@@ -161,6 +161,7 @@ export class ManageUsersPage extends AdminPageTemplate implements OnInit {
         ...user,
         ...(typeof update.admin === 'boolean' ? { admin: update.admin } : {}),
         ...(typeof update.master === 'boolean' ? { master: update.master } : {}),
+        ...(typeof update.banned === 'boolean' ? { banned: update.banned } : {}),
       };
     });
 

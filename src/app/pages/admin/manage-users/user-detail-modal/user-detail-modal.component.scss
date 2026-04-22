@@ -35,9 +35,16 @@
 }
 
 .user-detail-modal {
-  --width: min(92vw, 420px);
+  --width: min(96vw, 720px);
   --height: auto;
+  --max-height: 88vh;
   --border-radius: 14px;
+}
+
+.user-detail-modal .modal-body {
+  max-height: calc(88vh - 84px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .user-info {
@@ -91,4 +98,213 @@
 
 .impersonate-button {
   margin-top: 8px;
+}
+
+.ban-create-dropdown,
+.bans-dropdown {
+  margin-top: 14px;
+  border: 1px solid rgba(var(--ion-color-medium-rgb), 0.25);
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(var(--ion-color-light-rgb), 0.7);
+
+  summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(var(--ion-color-medium-rgb), 0.2);
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .bans-count {
+    font-size: 0.86rem;
+    color: var(--ion-color-medium-shade);
+    font-weight: 500;
+  }
+}
+
+.ban-create-dropdown {
+  border: 1px solid rgba(var(--ion-color-danger-rgb), 0.65);
+  background: rgba(var(--ion-color-danger-rgb), 0.07);
+
+  summary {
+    color: var(--ion-color-danger-shade);
+    border-bottom: 1px solid rgba(var(--ion-color-danger-rgb), 0.32);
+    background: rgba(var(--ion-color-danger-rgb), 0.08);
+  }
+}
+
+.ban-summary-title {
+  margin-right: 12px;
+}
+
+.unban-inline-button {
+  border: 1px solid rgba(var(--ion-color-danger-rgb), 0.8);
+  background: var(--ion-color-danger);
+  color: var(--ion-color-danger-contrast);
+  border-radius: 7px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.unban-inline-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.ban-form-body {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ban-permanent-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.92rem;
+
+  ion-toggle {
+    --handle-width: 20px;
+    --handle-height: 20px;
+    --track-width: 42px;
+    --track-height: 24px;
+    --handle-spacing: 2px;
+    --background: rgba(var(--ion-color-medium-rgb), 0.45);
+    --background-checked: var(--ion-color-danger);
+  }
+}
+
+.ban-input-label {
+  font-size: 0.82rem;
+  color: var(--ion-color-medium-shade);
+  font-weight: 600;
+}
+
+.ban-input,
+.ban-textarea {
+  width: 100%;
+  border: 1px solid rgba(var(--ion-color-medium-rgb), 0.35);
+  border-radius: 8px;
+  background: var(--ion-color-light);
+  color: var(--ion-color-dark);
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+.ban-textarea {
+  resize: vertical;
+  min-height: 78px;
+}
+
+.ban-date-adjustments {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ban-date-adjust-btn {
+  border: 1px solid rgba(var(--ion-color-danger-rgb), 0.4);
+  background: rgba(var(--ion-color-danger-rgb), 0.08);
+  color: var(--ion-color-danger-shade);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ban-date-adjust-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.ban-form-note {
+  margin: 0;
+  color: var(--ion-color-medium-shade);
+  font-size: 0.85rem;
+}
+
+.ban-form-error {
+  margin: 0;
+  color: var(--ion-color-danger);
+  font-size: 0.85rem;
+}
+
+.ban-submit-button {
+  margin-top: 4px;
+}
+
+.bans-table-wrapper {
+  overflow-x: auto;
+}
+
+.bans-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    text-align: left;
+    vertical-align: middle;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(var(--ion-color-medium-rgb), 0.14);
+    font-size: 0.9rem;
+  }
+
+  th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--ion-color-medium-shade);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr.active-ban-row td {
+    color: var(--ion-color-danger-shade);
+  }
+
+  tr.active-ban-row .ban-end-date {
+    color: var(--ion-color-danger);
+    font-weight: 600;
+  }
+}
+
+.ban-dates-cell {
+  min-width: 124px;
+}
+
+.ban-end-date {
+  color: var(--ion-color-medium-shade);
+}
+
+.bans-empty {
+  margin: 0;
+  padding: 12px 14px;
+  color: var(--ion-color-medium-shade);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 540px) {
+  .bans-table {
+    th,
+    td {
+      padding: 8px 10px;
+      font-size: 0.82rem;
+    }
+  }
 }
