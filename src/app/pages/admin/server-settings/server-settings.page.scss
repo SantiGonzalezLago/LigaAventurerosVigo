@@ -1,0 +1,214 @@
+.server-settings-page {
+  // Error state
+  .error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    min-height: 300px;
+    text-align: center;
+
+    .error-icon {
+      font-size: 3rem;
+      color: var(--ion-color-danger);
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      margin: 8px 0;
+      font-size: 1.2rem;
+    }
+
+    p {
+      color: var(--ion-color-medium-shade);
+      margin: 0 0 20px;
+    }
+  }
+
+  .retry-button {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    background: var(--ion-color-primary);
+    color: var(--ion-color-primary-contrast);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      filter: brightness(1.08);
+    }
+  }
+
+  // Table
+  .table-wrapper {
+    padding: 16px;
+  }
+
+  .settings-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--ion-color-light-shade);
+      vertical-align: middle;
+    }
+
+    .setting-row:last-child td {
+      border-bottom: none;
+    }
+
+    // Stack layout on mobile
+    @media (max-width: 560px) {
+      .setting-row {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid var(--ion-color-light-shade);
+      }
+
+      .setting-row:last-child {
+        border-bottom: none;
+      }
+
+      td {
+        border-bottom: none;
+        padding: 6px 12px;
+
+        &.key-cell {
+          padding-bottom: 2px;
+        }
+
+        &.value-cell {
+          padding-top: 2px;
+          padding-bottom: 12px;
+        }
+      }
+    }
+  }
+
+  // Key column
+  .key-cell {
+    width: 40%;
+
+    @media (max-width: 560px) {
+      width: 100%;
+    }
+
+    .key-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: default;
+    }
+
+    .key-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ion-color-dark);
+    }
+
+    .tooltip {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      z-index: 100;
+      min-width: 200px;
+      max-width: 320px;
+      padding: 8px 12px;
+      background: var(--ion-color-dark);
+      color: var(--ion-color-dark-contrast);
+      font-size: 0.82rem;
+      font-family: inherit;
+      line-height: 1.45;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      pointer-events: none;
+      white-space: normal;
+      word-break: break-word;
+
+      // Small triangle
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        left: 14px;
+        border: 6px solid transparent;
+        border-bottom-color: var(--ion-color-dark);
+      }
+    }
+  }
+
+  // Value column
+  .value-cell {
+    .value-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .value-input {
+      flex: 1;
+      min-width: 0;
+      padding: 7px 10px;
+      border: 1px solid var(--ion-color-light-shade);
+      border-radius: 8px;
+      background: var(--ion-background-color);
+      color: var(--ion-color-dark);
+      font-size: 0.9rem;
+      transition: border-color 0.15s;
+
+      &:focus {
+        outline: none;
+        border-color: var(--ion-color-primary);
+      }
+    }
+
+    .save-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      border: none;
+      border-radius: 8px;
+      background: var(--ion-color-primary);
+      color: var(--ion-color-primary-contrast);
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: filter 0.15s, opacity 0.15s;
+
+      &:hover:not(:disabled) {
+        filter: brightness(1.1);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+
+      .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+    }
+
+    .save-error {
+      margin: 4px 0 0;
+      font-size: 0.8rem;
+      color: var(--ion-color-danger);
+    }
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

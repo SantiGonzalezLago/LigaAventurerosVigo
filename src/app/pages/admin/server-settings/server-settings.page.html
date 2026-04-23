@@ -1,0 +1,73 @@
+<ion-content class="page-content server-settings-page" fullscreen>
+
+  @if (loading) {
+    <app-loader></app-loader>
+  }
+
+  @if (error && !loading) {
+    <div class="error-container">
+      <ion-icon name="alert-circle-outline" class="error-icon"></ion-icon>
+      <h3>Error</h3>
+      <p>{{ error }}</p>
+      <button class="retry-button" (click)="retry()">Reintentar</button>
+    </div>
+  }
+
+  @if (!loading && !error && settings.length > 0) {
+    <div class="table-wrapper">
+      <table class="settings-table">
+        <tbody>
+          @for (setting of settings; track setting.key) {
+            <tr class="setting-row">
+              <td class="key-cell">
+                <div
+                  class="key-wrapper"
+                  (mouseenter)="setting.description ? showTooltip(setting.key) : null"
+                  (mouseleave)="hideTooltip()"
+                  (touchstart)="setting.description ? showTooltip(setting.key) : null"
+                  (touchend)="hideTooltip()"
+                >
+                  <span class="key-label">{{ setting.key }}</span>
+                  @if (setting.description && tooltipKey === setting.key) {
+                    <div class="tooltip">{{ setting.description }}</div>
+                  }
+                </div>
+              </td>
+              <td class="value-cell">
+                <div class="value-wrapper">
+                  <input
+                    class="value-input"
+                    type="text"
+                    [(ngModel)]="drafts[setting.key]"
+                    [name]="setting.key"
+                    [attr.aria-label]="'Valor de ' + setting.key"
+                    (keydown.enter)="save(setting.key)"
+                  />
+                  @if (isDirty(setting.key)) {
+                    <button
+                      class="save-button"
+                      [class.saving]="saving[setting.key]"
+                      [disabled]="saving[setting.key]"
+                      (click)="save(setting.key)"
+                      aria-label="Guardar"
+                    >
+                      @if (saving[setting.key]) {
+                        <span class="spinner"></span>
+                      } @else {
+                        <ion-icon name="checkmark-outline"></ion-icon>
+                      }
+                    </button>
+                  }
+                </div>
+                @if (saveError[setting.key]) {
+                  <p class="save-error">{{ saveError[setting.key] }}</p>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</ion-content>

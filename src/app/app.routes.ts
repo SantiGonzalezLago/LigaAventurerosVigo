@@ -29,6 +29,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/admin/manage-users/manage-users.page').then((m) => m.ManageUsersPage),
         canActivate: [AdminGuard],
       },
+      {
+        path: 'admin/server-settings',
+        loadComponent: () => import('./pages/admin/server-settings/server-settings.page').then((m) => m.ServerSettingsPage),
+        canActivate: [AdminGuard],
+      },
       // Redirecciones
       {
         path: '',
