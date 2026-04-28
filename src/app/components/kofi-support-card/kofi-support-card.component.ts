@@ -1,6 +1,5 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-kofi-support-card',
@@ -13,12 +12,26 @@ export class KofiSupportCardComponent {
   @Input() title: string = '¡Apóyanos en Ko-fi!';
   @Input() avatarSrc: string = 'assets/images/avatar.png';
   @Input() kofiIconSrc: string = 'assets/images/kofi.png';
+  @Input() set kofiLink(value: string) {
+    const normalized = this.normalizeUrl(value ?? '');
+    this.href = normalized;
+    this.displayUrl = normalized.replace(/^https?:\/\//i, '').replace(/\/$/, '');
+  }
 
   href: string = '';
   displayUrl: string = '';
 
-  constructor() {
-    this.displayUrl = environment.kofi;
-    this.href = `https://${environment.kofi}`;
+  private normalizeUrl(url: string): string {
+    const trimmed = url.trim();
+
+    if (!trimmed) {
+      return '';
+    }
+
+    if (/^https?:\/\//i.test(trimmed)) {
+      return trimmed;
+    }
+
+    return `https://${trimmed}`;
   }
 }

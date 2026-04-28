@@ -3,6 +3,10 @@
   --border-width: 0;
 }
 
+.modal-body ion-item + ion-item {
+  margin-top: 5px;
+}
+
 .separator {
   display: grid;
   grid-template-columns: 1fr auto 1fr;

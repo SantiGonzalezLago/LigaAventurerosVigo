@@ -128,8 +128,7 @@
               type="button"
               role="listitem"
               class="menu-badge"
-              routerLink="/settings"
-              routerDirection="forward"
+              (click)="openSettingsModal()"
             >
               <span class="menu-badge-main">
                 <span class="menu-badge-avatar menu-badge-avatar-action" aria-hidden="true">
@@ -159,7 +158,39 @@
     </ion-list>
   </ion-content>
 
-  <ion-footer class="menu-kofi-footer">
-    <app-kofi-support-card></app-kofi-support-card>
+  <ion-footer class="menu-footer">
+    @if (whatsappLink || instagramLink) {
+      <span class="menu-footer-social-icons">
+        @if (instagramLink) {
+          <a
+            class="menu-footer-social-link"
+            [href]="instagramLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            title="Instagram"
+          >
+            <ion-icon name="logo-instagram" aria-hidden="true"></ion-icon>
+          </a>
+        }
+
+        @if (whatsappLink) {
+          <a
+            class="menu-footer-social-link"
+            [href]="whatsappLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="WhatsApp"
+            title="WhatsApp"
+          >
+            <ion-icon name="logo-whatsapp" aria-hidden="true"></ion-icon>
+          </a>
+        }
+      </span>
+    }
+
+    @if (kofiLink) {
+      <app-kofi-support-card [kofiLink]="kofiLink"></app-kofi-support-card>
+    }
   </ion-footer>
 </ion-menu>

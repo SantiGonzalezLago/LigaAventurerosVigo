@@ -75,6 +75,19 @@ export class ApiService {
     });
   }
 
+  public delete<T>(
+    endpoint: string,
+    params?: QueryParams,
+    headers?: RequestHeaders
+  ): Observable<T> {
+    const url = this.buildUrl(endpoint);
+
+    return this.http.delete<T>(url, {
+      params: this.toHttpParams(params),
+      headers: this.toHttpHeaders(this.resolveRequestHeaders(headers, url)),
+    });
+  }
+
   private resolveRequestHeaders(headers: RequestHeaders | undefined, url: string): RequestHeaders | undefined {
     if (!this.isInternalApiUrl(url) || this.hasAuthorizationHeader(headers)) {
       return headers;

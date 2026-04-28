@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AppMenuComponent } from './components/app-menu/app-menu.component';
 import { LoginModalComponent } from './components/login-modal/login-modal.component';
+import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
 import { ThemeService } from './services/theme.service';
 
 interface LoginModalRequester {
@@ -11,12 +12,14 @@ interface LoginModalRequester {
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  imports: [IonApp, IonRouterOutlet, AppMenuComponent, LoginModalComponent],
+  imports: [IonApp, IonRouterOutlet, AppMenuComponent, LoginModalComponent, SettingsModalComponent],
 })
 export class AppComponent {
   private themeService = inject(ThemeService);
   public isLoginModalOpen = false;
+  public isSettingsModalOpen = false;
   public readonly loginModalOpener = () => this.openLoginModal();
+  public readonly settingsModalOpener = () => this.openSettingsModal();
 
   constructor() {
     void this.themeService;
@@ -28,6 +31,14 @@ export class AppComponent {
 
   public closeLoginModal(): void {
     this.isLoginModalOpen = false;
+  }
+
+  public openSettingsModal(): void {
+    this.isSettingsModalOpen = true;
+  }
+
+  public closeSettingsModal(): void {
+    this.isSettingsModalOpen = false;
   }
 
   public onRouteActivate(component: unknown): void {

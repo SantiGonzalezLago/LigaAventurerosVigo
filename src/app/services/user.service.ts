@@ -250,6 +250,109 @@ export class UserService {
     );
   }
 
+  public updateSettings(payload: {
+    name?: string;
+    password?: string;
+    avatar?: File;
+  }): Observable<{
+    success: boolean;
+    message?: string;
+    user?: UserData;
+  }> {
+    const activeUser = this.getActiveUser();
+    if (!activeUser) {
+      return of({
+        success: false,
+        message: 'No autorizado',
+      });
+    }
+
+    const normalizedName = typeof payload.name === 'string' ? payload.name.trim() : '';
+    const normalizedPassword = typeof payload.password === 'string' ? payload.password.trim() : '';
+    const body: { name?: string; password?: string } = {};
+
+    if (normalizedName) {
+      body.name = normalizedName;
+    }
+
+    if (normalizedPassword) {
+      body.password = normalizedPassword;
+    }
+
+    const hasAvatar = payload.avatar instanceof File;
+    if (!hasAvatar && !body.name && !body.password) {
+      return of({
+        success: false,
+        message: 'No hay cambios para guardar',
+      });
+    }
+
+    const request$ = hasAvatar
+      ? this.api.postWithFiles<{ message: string; user: Omit<UserData, 'jwt'> & { jwt?: string } }, { name?: string; password?: string }>(
+          'update-settings',
+          body,
+          { avatar: payload.avatar as File }
+        )
+      : this.api.post<{ message: string; user: Omit<UserData, 'jwt'> & { jwt?: string } }, { name?: string; password?: string }>(
+          'update-settings',
+          body
+        );
+
+    return request$.pipe(
+      map((response) => {
+        const updatedUser = this.mergeUpdatedUser(activeUser, response.user);
+        if (!this.isValidUser(updatedUser)) {
+          return {
+            success: false,
+            message: 'Respuesta de usuario inválida',
+          };
+        }
+
+        this.saveUser(updatedUser, true);
+
+        return {
+          success: true,
+          message: this.normalizeMessage(response.message),
+          user: updatedUser,
+        };
+      }),
+      catchError((error: unknown) => of({
+        success: false,
+        message: this.extractErrorMessage(error),
+      }))
+    );
+  }
+
+  public deleteActiveUser(): Observable<{
+    success: boolean;
+    message?: string;
+    deleteOn?: string;
+  }> {
+    const activeUser = this.getActiveUser();
+    if (!activeUser) {
+      return of({
+        success: false,
+        message: 'No autorizado',
+      });
+    }
+
+    return this.api.delete<{ message: string; delete_on?: string }>('delete-user').pipe(
+      map((response) => {
+        this.logout(activeUser.uid);
+
+        return {
+          success: true,
+          message: this.normalizeMessage(response.message),
+          deleteOn: typeof response.delete_on === 'string' ? response.delete_on : undefined,
+        };
+      }),
+      catchError((error: unknown) => of({
+        success: false,
+        message: this.extractErrorMessage(error),
+      }))
+    );
+  }
+
   public logout(uid?: string): void {
     const targetUid = uid ?? this.activeUidSubject.value;
     if (!targetUid) {
@@ -316,6 +419,20 @@ export class UserService {
     }
 
     return [activeUser, ...users.filter((user) => user.uid !== activeUid)];
+  }
+
+  private mergeUpdatedUser(activeUser: UserData, responseUser: Omit<UserData, 'jwt'> & { jwt?: string }): UserData {
+    const jwt = typeof responseUser.jwt === 'string' && responseUser.jwt.trim() ? responseUser.jwt : activeUser.jwt;
+
+    return {
+      ...activeUser,
+      ...responseUser,
+      jwt,
+    };
+  }
+
+  private normalizeMessage(message: unknown): string | undefined {
+    return typeof message === 'string' && message.trim() ? message : undefined;
   }
 
   private isValidUser(user: unknown): user is UserData {

@@ -1,8 +1,8 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { moonOutline, phonePortraitOutline, closeCircle, compass, shieldCheckmark, sunnyOutline, settingsOutline, colorPaletteOutline } from 'ionicons/icons';
+import { moonOutline, phonePortraitOutline, closeCircle, compass, shieldCheckmark, sunnyOutline, settingsOutline, colorPaletteOutline, logoInstagram, logoWhatsapp } from 'ionicons/icons';
 import { ActionSheetController } from '@ionic/angular';
 import {
   IonContent,
@@ -17,10 +17,11 @@ import {
 } from '@ionic/angular/standalone';
 import { ThemeMode, ThemeService } from 'src/app/services/theme.service';
 import { UserService } from 'src/app/services/user.service';
+import { ApiService } from 'src/app/services/api.service';
 import { environment } from '../../../environments/environment';
 import { KofiSupportCardComponent } from '../kofi-support-card/kofi-support-card.component';
 
-addIcons({ colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, compass, shieldCheckmark, sunnyOutline, settingsOutline });
+addIcons({ colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, compass, shieldCheckmark, sunnyOutline, settingsOutline, logoInstagram, logoWhatsapp });
 
 @Component({
   selector: 'app-menu',
@@ -41,11 +42,13 @@ addIcons({ colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, 
     KofiSupportCardComponent,
   ],
 })
-export class AppMenuComponent {
+export class AppMenuComponent implements OnInit {
   private themeService = inject(ThemeService);
   private actionSheetCtrl = inject(ActionSheetController);
   private userService = inject(UserService);
+  private apiService = inject(ApiService);
   @Input() loginModalOpener: (() => void) | null = null;
+  @Input() settingsModalOpener: (() => void) | null = null;
 
   currentTheme: ThemeMode = 'system';
   themeOptions: { value: ThemeMode; label: string }[] = [];
@@ -53,6 +56,9 @@ export class AppMenuComponent {
   appName = environment.appName;
   users$ = this.userService.users$;
   activeUid$ = this.userService.activeUid$;
+  kofiLink: string | null = null;
+  instagramLink: string | null = null;
+  whatsappLink: string | null = null;
 
   ngOnInit(): void {
     this.currentTheme = this.themeService.getCurrentTheme();
@@ -61,6 +67,24 @@ export class AppMenuComponent {
     this.themeService.currentTheme$.subscribe(theme => {
       this.currentTheme = theme;
     });
+
+    this.loadSocialLinks();
+  }
+
+  private loadSocialLinks(): void {
+    this.apiService.get<{ message: string; social_links?: { instagram?: string; whatsapp?: string; kofi?: string } }>('social-links')
+      .subscribe({
+        next: (response) => {
+          this.kofiLink = response.social_links?.kofi ?? null;
+          this.instagramLink = response.social_links?.instagram ?? null;
+          this.whatsappLink = response.social_links?.whatsapp ?? null;
+        },
+        error: () => {
+          this.kofiLink = null;
+          this.instagramLink = null;
+          this.whatsappLink = null;
+        },
+      });
   }
 
   async openThemeSelector(): Promise<void> {
@@ -104,6 +128,10 @@ export class AppMenuComponent {
 
   public isLoggedIn(): boolean {
     return this.userService.isLoggedIn();
+  }
+
+  public openSettingsModal(): void {
+    this.settingsModalOpener?.();
   }
 
   private getThemeButtonClasses(themeValue: ThemeMode, isActive: boolean): string {

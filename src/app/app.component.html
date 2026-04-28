@@ -1,5 +1,6 @@
 <ion-app>
-  <app-menu [loginModalOpener]="loginModalOpener"></app-menu>
+  <app-menu [loginModalOpener]="loginModalOpener" [settingsModalOpener]="settingsModalOpener"></app-menu>
   <ion-router-outlet id="main-content" (activate)="onRouteActivate($event)"></ion-router-outlet>
   <app-login-modal [isOpen]="isLoginModalOpen" (close)="closeLoginModal()"></app-login-modal>
+  <app-settings-modal [isOpen]="isSettingsModalOpen" (close)="closeSettingsModal()"></app-settings-modal>
 </ion-app>

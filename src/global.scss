@@ -63,3 +63,26 @@ ion-button::part(native) {
 	border-radius: 999px;
 	padding: 0;
 }
+
+ion-item:has(ion-input),
+ion-item:has(ion-textarea) {
+	--inner-border-width: 0;
+	--border-width: 0;
+	--background: var(--ion-item-background, var(--ion-color-light));
+	--highlight-height: 0;
+	border: 1px solid rgba(var(--ion-color-medium-rgb), 0.4);
+	border-radius: 12px;
+	transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+ion-item:has(ion-input).item-has-focus,
+ion-item:has(ion-input):focus-within,
+ion-item:has(ion-textarea).item-has-focus,
+ion-item:has(ion-textarea):focus-within {
+	border-color: rgba(var(--ion-color-primary-rgb), 0.55);
+	box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.14);
+}
+
+.alert-button-danger {
+	color: var(--ion-color-danger) !important;
+}

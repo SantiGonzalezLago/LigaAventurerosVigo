@@ -1,0 +1,82 @@
+<ion-modal class="settings-modal" [isOpen]="isOpen" (didDismiss)="onDidDismiss()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Configuración</ion-title>
+        <ion-buttons slot="end">
+          <ion-button class="round-button" fill="clear" aria-label="Cerrar" (click)="closeModal()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <div class="modal-body ion-padding">
+        <div class="avatar-section">
+          <div class="avatar-row">
+            <button type="button" class="avatar-picker-button" (click)="openAvatarPicker()" aria-label="Cambiar avatar">
+              @if (avatarPreview) {
+                <img class="avatar-preview" [src]="avatarPreview" alt="Avatar del usuario" />
+              } @else {
+                <div class="avatar-preview avatar-fallback" aria-hidden="true">
+                  <ion-icon class="avatar-fallback-user" name="person-circle-outline"></ion-icon>
+                </div>
+              }
+              <span class="avatar-add-badge" aria-hidden="true">
+                <ion-icon name="add-outline"></ion-icon>
+              </span>
+            </button>
+          </div>
+          <input
+            #avatarFileInput
+            class="hidden-file-input"
+            type="file"
+            accept="image/*"
+            (change)="onAvatarFileSelected($event)"
+          />
+        </div>
+
+        <ion-item>
+          <ion-input
+            [(ngModel)]="username"
+            autocomplete="username"
+            label="Nombre de usuario"
+            labelPlacement="stacked"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            [(ngModel)]="password"
+            autocomplete="new-password"
+            type="password"
+            label="Nueva contraseña"
+            labelPlacement="stacked"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            [(ngModel)]="passwordRepeat"
+            autocomplete="new-password"
+            type="password"
+            label="Repetir contraseña"
+            labelPlacement="stacked"
+          ></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" (click)="saveChanges()">Guardar cambios</ion-button>
+
+        <div class="settings-uid" aria-label="UID del usuario">
+          <span class="settings-uid-label">UUID</span>
+          <span class="settings-uid-value">{{ uid }}</span>
+        </div>
+
+        <ion-button class="delete-account-button" expand="block" fill="outline" color="danger" type="button" (click)="confirmDeleteAccount()">
+          Eliminar mi cuenta
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
