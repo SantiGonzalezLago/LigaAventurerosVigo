@@ -15,14 +15,10 @@ import { ApiService } from '../../../services/api.service';
 import { PageHeaderService } from '../../../services/page-header.service';
 import { PaginationComponent } from '../../../components/pagination/pagination.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
+import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
 import { UserDetailModalComponent } from './user-detail-modal/user-detail-modal.component';
 
 addIcons({ compass, shieldCheckmark, alertCircleOutline, searchOutline });
-
-
-addIcons({ compass, shieldCheckmark, alertCircleOutline });
-
-// Using implicit object types (no explicit type aliases)
 
 @Component({
   selector: 'app-manage-users',
@@ -35,6 +31,7 @@ addIcons({ compass, shieldCheckmark, alertCircleOutline });
     IonIcon,
     PaginationComponent,
     LoaderComponent,
+    ErrorStateComponent,
     UserDetailModalComponent,
   ],
   templateUrl: './manage-users.page.html',
@@ -192,7 +189,7 @@ export class ManageUsersPage extends AdminPageTemplate implements OnInit {
           }
 
           const message =
-            httpError?.error?.message || 'Error al cargar los usuarios. Intenta de nuevo.';
+            httpError?.error?.message || 'No se han podido cargar los usuarios.';
           this.updateState({ error: message });
           return of(null);
         })

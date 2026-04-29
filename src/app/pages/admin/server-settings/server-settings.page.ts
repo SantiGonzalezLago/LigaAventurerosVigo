@@ -4,14 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { checkmarkOutline, alertCircleOutline } from 'ionicons/icons';
+import { checkmarkOutline } from 'ionicons/icons';
 import { take, catchError, of } from 'rxjs';
 import { AdminPageTemplate } from '../../../templates/admin-page.template';
 import { ApiService } from '../../../services/api.service';
 import { PageHeaderService } from '../../../services/page-header.service';
 import { LoaderComponent } from '../../../components/loader/loader.component';
+import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
 
-addIcons({ checkmarkOutline, alertCircleOutline });
+addIcons({ checkmarkOutline });
 
 interface Setting {
   key: string;
@@ -22,7 +23,7 @@ interface Setting {
 @Component({
   selector: 'app-server-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon, LoaderComponent],
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, LoaderComponent, ErrorStateComponent],
   templateUrl: './server-settings.page.html',
   styleUrls: ['./server-settings.page.scss'],
 })
@@ -61,7 +62,7 @@ export class ServerSettingsPage extends AdminPageTemplate {
       .subscribe((response) => {
         this.loading = false;
         if (!response) {
-          this.error = 'No se pudieron cargar las configuraciones.';
+          this.error = 'No se han podido cargar las configuraciones.';
           return;
         }
         this.settings = response.settings;

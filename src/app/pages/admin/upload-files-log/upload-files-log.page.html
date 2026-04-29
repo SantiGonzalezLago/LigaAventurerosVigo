@@ -1,0 +1,174 @@
+<ion-content class="page-content upload-log-page" fullscreen>
+  @if (state$ | async; as state) {
+    @if (state.loading) {
+      <app-loader></app-loader>
+    }
+
+    <div class="search-container">
+      <ion-searchbar
+        [(ngModel)]="searchDraft"
+        (ionInput)="onSearchInput($event)"
+        placeholder="Buscar por nombre de archivo, carpeta, IP o usuario..."
+      ></ion-searchbar>
+
+      <div class="filters-row">
+        <label class="filter-item">
+          <span class="filter-label">Desde</span>
+          <ion-item>
+            <ion-input type="date" [value]="dateFrom" (ionChange)="onDateFromChange($event)"></ion-input>
+          </ion-item>
+        </label>
+
+        <label class="filter-item">
+          <span class="filter-label">Hasta</span>
+          <ion-item>
+            <ion-input type="date" [value]="dateTo" (ionChange)="onDateToChange($event)"></ion-input>
+          </ion-item>
+        </label>
+
+      </div>
+    </div>
+
+    @if (state.error && state.logs.length === 0) {
+      <app-error-state [message]="state.error" (retry)="retry()"></app-error-state>
+    }
+
+    @if (state.logs.length > 0) {
+      <div class="table-wrapper">
+        <table class="logs-table">
+          <thead>
+            <tr>
+              <th class="user-col sortable" (click)="onSort('user_name')">
+                Usuario
+                @if (isSorted('user_name')) {
+                  <span class="sort-indicator">{{ getSortIcon('user_name') }}</span>
+                }
+              </th>
+              <th class="file-col sortable" (click)="onSort('file_name')">
+                Fichero
+                @if (isSorted('file_name')) {
+                  <span class="sort-indicator">{{ getSortIcon('file_name') }}</span>
+                }
+              </th>
+              <th class="ip-col sortable" (click)="onSort('remote_addr')">
+                IP
+                @if (isSorted('remote_addr')) {
+                  <span class="sort-indicator">{{ getSortIcon('remote_addr') }}</span>
+                }
+              </th>
+              <th class="size-col sortable" (click)="onSort('size_bytes')">
+                Tamaño
+                @if (isSorted('size_bytes')) {
+                  <span class="sort-indicator">{{ getSortIcon('size_bytes') }}</span>
+                }
+              </th>
+              <th class="timestamp-col sortable" (click)="onSort('timestamp')">
+                Fecha
+                @if (isSorted('timestamp')) {
+                  <span class="sort-indicator">{{ getSortIcon('timestamp') }}</span>
+                }
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (log of state.logs; track log.id) {
+              <tr>
+                <td>
+                  <div class="user-name">{{ log.user_name || 'Sin nombre' }}</div>
+                  <div class="user-uid mono">{{ log.user_uid }}</div>
+                </td>
+                <td class="mono file-name" [title]="log.file_name">
+                  @if (canPreviewFile(log)) {
+                    <button
+                      type="button"
+                      class="file-link"
+                      (click)="openFilePreview(log)"
+                    >
+                      {{ getShortFileName(log.file_name) }}
+                    </button>
+                  } @else {
+                    <div>{{ getShortFileName(log.file_name) }}</div>
+                  }
+                  <div class="file-state">
+                    @if (log.exists) {
+                      <span class="status-badge exists">Disponible</span>
+                    } @else {
+                      <span class="status-badge missing">No existe</span>
+                    }
+                    @if (log.note) {
+                      <div class="note" [title]="log.note">{{ log.note }}</div>
+                    }
+                  </div>
+                </td>
+                <td class="mono">{{ log.remote_addr }}</td>
+                <td>{{ formatBytes(log.size_bytes) }}</td>
+                <td>{{ log.timestamp | date : 'dd/MM/yyyy HH:mm:ss' : '' : 'es' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalPages]="state.pagination.total_pages"
+        [total]="state.pagination.total"
+        [itemsCount]="state.logs.length"
+        (pageChange)="goToPage($event)"
+      ></app-pagination>
+    }
+
+    @if (!state.loading && !state.error && state.logs.length === 0) {
+      <div class="empty-container">
+        <ion-icon name="search-outline" class="empty-icon"></ion-icon>
+        <h3>Sin resultados</h3>
+        <p>
+          @if (searchQuery || dateFrom || dateTo) {
+            No se encontraron registros con los filtros actuales.
+          } @else {
+            Todavía no hay registros de subidas.
+          }
+        </p>
+      </div>
+    }
+
+    <ion-modal [isOpen]="isPreviewModalOpen" (didDismiss)="closeFilePreview()" class="file-preview-modal">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Ver fichero</ion-title>
+            <ion-buttons slot="end">
+              <ion-button class="round-button" fill="clear" aria-label="Cerrar" (click)="closeFilePreview()">
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+
+        <div class="modal-body ion-padding">
+          @if (previewIsImage && previewImageUrl) {
+            <img
+              class="preview-image"
+              [src]="previewImageUrl"
+              [alt]="previewFileName"
+            />
+          } @else if (previewSafeUrl) {
+            <iframe
+              class="preview-frame"
+              [src]="previewSafeUrl"
+              title="Vista previa de fichero"
+            ></iframe>
+          } @else {
+            <p>No se pudo generar una URL segura para la vista previa de este fichero.</p>
+          }
+
+          <div class="preview-actions">
+            <ion-button type="button" fill="outline" size="small" (click)="openPreviewInNewTab()">
+              Abrir en pestaña nueva
+            </ion-button>
+          </div>
+        </div>
+      </ng-template>
+    </ion-modal>
+  }
+</ion-content>

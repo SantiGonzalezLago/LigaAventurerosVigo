@@ -14,12 +14,7 @@
 
     <!-- Error State -->
     @if (state.error && state.users.length === 0) {
-      <div class="error-container">
-        <ion-icon name="alert-circle" class="error-icon"></ion-icon>
-        <h3>Error</h3>
-        <p>{{ state.error }}</p>
-        <button class="retry-button" (click)="retry()">Reintentar</button>
-      </div>
+      <app-error-state [message]="state.error" (retry)="retry()"></app-error-state>
     }
 
     <!-- Table -->

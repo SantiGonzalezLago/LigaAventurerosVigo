@@ -88,6 +88,7 @@ export class LoginModalComponent implements OnChanges {
   private readonly ngZone = inject(NgZone);
   private readonly cdr = inject(ChangeDetectorRef);
   private googleClientId: string | null = null;
+  private googleInitializedForCurrentOpen = false;
 
   @ViewChild('googleButtonContainer') private googleButtonContainer?: ElementRef<HTMLDivElement>;
 
@@ -104,8 +105,8 @@ export class LoginModalComponent implements OnChanges {
   public googleButtonReady = false;
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes['isOpen']?.currentValue) {
-      void this.initializeGoogleLogin();
+    if (changes['isOpen']?.currentValue === false) {
+      this.googleInitializedForCurrentOpen = false;
     }
   }
 
@@ -114,6 +115,13 @@ export class LoginModalComponent implements OnChanges {
   }
 
   public onDidDismiss(): void {
+    this.googleInitializedForCurrentOpen = false;
+    this.googleButtonReady = false;
+    this.googleErrorMessage = '';
+    const container = this.googleButtonContainer?.nativeElement;
+    if (container) {
+      container.innerHTML = '';
+    }
     this.resetForm();
     this.close.emit();
   }
@@ -186,6 +194,10 @@ export class LoginModalComponent implements OnChanges {
       return;
     }
 
+    if (!forceRefreshClient && this.googleInitializedForCurrentOpen && this.googleButtonReady) {
+      return;
+    }
+
     this.isGoogleLoading = true;
     this.googleErrorMessage = '';
     this.googleButtonReady = false;
@@ -232,8 +244,10 @@ export class LoginModalComponent implements OnChanges {
         size: 'large',
         width: Math.max(220, Math.floor(container.clientWidth)),
       });
+      this.googleInitializedForCurrentOpen = true;
     } catch (error: unknown) {
       this.googleButtonReady = false;
+      this.googleInitializedForCurrentOpen = false;
       this.googleErrorMessage = this.resolveErrorMessage(error) ?? 'No se pudo preparar el login con Google';
     } finally {
       this.isGoogleLoading = false;

@@ -27,6 +27,22 @@
         <span class="action-button-label">Configuraciones del servidor</span>
       </button>
 
+      <button
+        type="button"
+        role="listitem"
+        class="action-button"
+        routerLink="/admin/upload-files-log"
+        routerDirection="forward"
+      >
+        <span class="action-button-label">Log de subidas de ficheros</span>
+        <span class="action-button-badges">
+          <span class="badge badge-neutral">{{ files.total }}</span>
+          @if (files.new > 0) {
+            <span class="badge badge-warning">{{ files.new }}</span>
+          }
+        </span>
+      </button>
+
     </div>
   </div>
 </ion-content>

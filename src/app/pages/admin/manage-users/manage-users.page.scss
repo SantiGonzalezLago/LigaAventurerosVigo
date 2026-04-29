@@ -37,54 +37,6 @@
     }
   }
 
-  // Error State
-  .error-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    min-height: 300px;
-    text-align: center;
-
-    .error-icon {
-      font-size: 3rem;
-      color: var(--ion-color-danger);
-      margin-bottom: 16px;
-    }
-
-    h3 {
-      margin: 8px 0;
-
-      font-size: 1.2rem;
-    }
-
-    p {
-      color: var(--ion-color-medium-shade);
-      margin: 8px 0 20px;
-      max-width: 300px;
-    }
-
-    .retry-button {
-      background: var(--ion-color-primary);
-      color: white;
-      border: none;
-      padding: 10px 24px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s ease;
-
-      &:hover {
-        background: var(--ion-color-primary-shade);
-      }
-
-      &:active {
-        opacity: 0.8;
-      }
-    }
-  }
-
   // Empty State
   .empty-container {
     display: flex;

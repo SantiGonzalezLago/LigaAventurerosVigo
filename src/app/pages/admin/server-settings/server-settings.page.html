@@ -5,12 +5,7 @@
   }
 
   @if (error && !loading) {
-    <div class="error-container">
-      <ion-icon name="alert-circle-outline" class="error-icon"></ion-icon>
-      <h3>Error</h3>
-      <p>{{ error }}</p>
-      <button class="retry-button" (click)="retry()">Reintentar</button>
-    </div>
+    <app-error-state [message]="error" (retry)="retry()"></app-error-state>
   }
 
   @if (!loading && !error && settings.length > 0) {

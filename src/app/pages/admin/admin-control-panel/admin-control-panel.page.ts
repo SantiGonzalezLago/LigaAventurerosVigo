@@ -26,6 +26,11 @@ export class AdminControlPanelPage extends AdminPageTemplate {
     banned: 0,
   };
 
+  files = {
+    total: 0,
+    new: 0,
+  };
+
   override ionViewWillEnter(): void {
     super.ionViewWillEnter();
     this.pageHeaderService.setTitle('Administración');
@@ -36,6 +41,10 @@ export class AdminControlPanelPage extends AdminPageTemplate {
         confirmed: number;
         unconfirmed: number;
         banned: number;
+      };
+      files: {
+        total: number;
+        new: number;
       };
     }>('admin/control-panel')
       .pipe(
@@ -52,6 +61,10 @@ export class AdminControlPanelPage extends AdminPageTemplate {
               unconfirmed: number;
               banned: number;
             };
+            files: {
+              total: number;
+              new: number;
+            };
           } | null>(null);
         })
       )
@@ -64,6 +77,11 @@ export class AdminControlPanelPage extends AdminPageTemplate {
           confirmed: response.users?.confirmed ?? 0,
           unconfirmed: response.users?.unconfirmed ?? 0,
           banned: response.users?.banned ?? 0,
+        };
+
+        this.files = {
+          total: response.files?.total ?? 0,
+          new: response.files?.new ?? 0,
         };
       });
   }

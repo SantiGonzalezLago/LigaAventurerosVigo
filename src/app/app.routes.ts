@@ -34,6 +34,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/admin/server-settings/server-settings.page').then((m) => m.ServerSettingsPage),
         canActivate: [AdminGuard],
       },
+      {
+        path: 'admin/upload-files-log',
+        loadComponent: () => import('./pages/admin/upload-files-log/upload-files-log.page').then((m) => m.UploadFilesLogPage),
+        canActivate: [AdminGuard],
+      },
       // Redirecciones
       {
         path: '',
