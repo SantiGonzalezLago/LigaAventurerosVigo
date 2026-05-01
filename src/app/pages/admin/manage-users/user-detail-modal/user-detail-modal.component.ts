@@ -563,7 +563,7 @@ export class UserDetailModalComponent {
   }
 
   private resetBanForm(): void {
-    this.banPermanent = true;
+    this.banPermanent = false;
     this.banDateEnd = '';
     this.banReason = '';
     this.banFormError = '';

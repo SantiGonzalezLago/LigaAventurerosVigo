@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BehaviorSubject, Subject, catchError, debounceTime, distinctUntilChanged, of, take, takeUntil } from 'rxjs';
-import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonModal, IonSearchbar, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonInput, IonItem, IonModal, IonSearchbar, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { alertCircleOutline, closeOutline, searchOutline } from 'ionicons/icons';
+import { alertCircleOutline, closeOutline, refreshOutline, searchOutline } from 'ionicons/icons';
 import { AdminPageTemplate } from '../../../templates/admin-page.template';
 import { ApiService } from '../../../services/api.service';
 import { PageHeaderService } from '../../../services/page-header.service';
@@ -14,7 +14,7 @@ import { LoaderComponent } from '../../../components/loader/loader.component';
 import { PaginationComponent } from '../../../components/pagination/pagination.component';
 import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
 
-addIcons({ alertCircleOutline, closeOutline, searchOutline });
+addIcons({ alertCircleOutline, closeOutline, refreshOutline, searchOutline });
 
 @Component({
   selector: 'app-upload-files-log',
@@ -23,6 +23,8 @@ addIcons({ alertCircleOutline, closeOutline, searchOutline });
     CommonModule,
     FormsModule,
     IonContent,
+    IonFab,
+    IonFabButton,
     IonModal,
     IonHeader,
     IonToolbar,
@@ -162,6 +164,14 @@ export class UploadFilesLogPage extends AdminPageTemplate implements OnInit {
 
   public retry(): void {
     this.currentPage = 1;
+    this.loadLogs();
+  }
+
+  public refreshList(): void {
+    if (this.state.loading) {
+      return;
+    }
+
     this.loadLogs();
   }
 

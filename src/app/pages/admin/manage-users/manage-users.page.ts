@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   IonContent,
+  IonFab,
+  IonFabButton,
   IonSearchbar,
   IonIcon,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { compass, shieldCheckmark, alertCircleOutline, searchOutline, star } from 'ionicons/icons';
+import { compass, shieldCheckmark, alertCircleOutline, refreshOutline, searchOutline, star } from 'ionicons/icons';
 import { BehaviorSubject, Subject, catchError, debounceTime, distinctUntilChanged, take, takeUntil, of } from 'rxjs';
 import { AdminPageTemplate } from '../../../templates/admin-page.template';
 import { ApiService } from '../../../services/api.service';
@@ -18,7 +20,7 @@ import { LoaderComponent } from '../../../components/loader/loader.component';
 import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
 import { UserDetailModalComponent } from './user-detail-modal/user-detail-modal.component';
 
-addIcons({ compass, shieldCheckmark, alertCircleOutline, searchOutline, star });
+addIcons({ compass, shieldCheckmark, alertCircleOutline, refreshOutline, searchOutline, star });
 
 @Component({
   selector: 'app-manage-users',
@@ -27,6 +29,8 @@ addIcons({ compass, shieldCheckmark, alertCircleOutline, searchOutline, star });
     CommonModule,
     FormsModule,
     IonContent,
+    IonFab,
+    IonFabButton,
     IonSearchbar,
     IonIcon,
     PaginationComponent,
@@ -128,6 +132,14 @@ export class ManageUsersPage extends AdminPageTemplate implements OnInit {
 
   public retry(): void {
     this.currentPage = 1;
+    this.loadUsers();
+  }
+
+  public refreshList(): void {
+    if (this.state.loading) {
+      return;
+    }
+
     this.loadUsers();
   }
 

@@ -192,6 +192,18 @@
     color: var(--ion-color-medium);
   }
 
+  .refresh-fab {
+    margin-right: 8px;
+    margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+    z-index: 20;
+  }
+
+  .refresh-fab-button {
+    --background: var(--ion-color-medium);
+    --color: var(--ion-color-light);
+    --box-shadow: 0 6px 14px rgba(var(--ion-color-medium-rgb), 0.28);
+  }
+
 }
 
 .file-preview-modal ion-toolbar ion-buttons[slot='end'] {

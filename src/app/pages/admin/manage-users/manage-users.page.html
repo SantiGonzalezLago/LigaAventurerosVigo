@@ -144,5 +144,16 @@
         </p>
       </div>
     }
+
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="refresh-fab">
+      <ion-fab-button
+        color="medium"
+        class="refresh-fab-button"
+        [disabled]="state.loading"
+        (click)="refreshList()"
+      >
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
   }
 </ion-content>
