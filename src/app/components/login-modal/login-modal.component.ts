@@ -99,9 +99,8 @@ export class LoginModalComponent implements OnChanges {
   public password = '';
   public showPassword = false;
   public isSubmitting = false;
-  public errorMessage = '';
   public isGoogleLoading = false;
-  public googleErrorMessage = '';
+  public hasGoogleSetupError = false;
   public googleButtonReady = false;
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -117,7 +116,7 @@ export class LoginModalComponent implements OnChanges {
   public onDidDismiss(): void {
     this.googleInitializedForCurrentOpen = false;
     this.googleButtonReady = false;
-    this.googleErrorMessage = '';
+    this.hasGoogleSetupError = false;
     const container = this.googleButtonContainer?.nativeElement;
     if (container) {
       container.innerHTML = '';
@@ -132,7 +131,6 @@ export class LoginModalComponent implements OnChanges {
     }
 
     this.isSubmitting = true;
-    this.errorMessage = '';
 
     this.userService.loginPassword(this.user.trim(), this.password).pipe(take(1)).subscribe((result) => {
       this.isSubmitting = false;
@@ -144,7 +142,7 @@ export class LoginModalComponent implements OnChanges {
         return;
       }
 
-      this.errorMessage = result.message ?? 'No se pudo iniciar sesion';
+      void this.showLoginErrorToast(result.message ?? 'No se pudo iniciar sesion');
     });
   }
 
@@ -157,19 +155,10 @@ export class LoginModalComponent implements OnChanges {
     this.password = '';
     this.showPassword = false;
     this.isSubmitting = false;
-    this.errorMessage = '';
   }
 
   public togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
-  }
-
-  public clearErrorMessage(): void {
-    if (!this.errorMessage) {
-      return;
-    }
-
-    this.errorMessage = '';
   }
 
   public closeModal(): void {
@@ -189,6 +178,18 @@ export class LoginModalComponent implements OnChanges {
     await toast.present();
   }
 
+  private async showLoginErrorToast(message: string): Promise<void> {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2400,
+      position: 'bottom',
+      positionAnchor: 'main-tab-bar',
+      color: 'danger',
+    });
+
+    await toast.present();
+  }
+
   private async initializeGoogleLogin(forceRefreshClient = false): Promise<void> {
     if (!this.isOpen || this.isGoogleLoading) {
       return;
@@ -199,7 +200,7 @@ export class LoginModalComponent implements OnChanges {
     }
 
     this.isGoogleLoading = true;
-    this.googleErrorMessage = '';
+    this.hasGoogleSetupError = false;
     this.googleButtonReady = false;
 
     try {
@@ -248,7 +249,8 @@ export class LoginModalComponent implements OnChanges {
     } catch (error: unknown) {
       this.googleButtonReady = false;
       this.googleInitializedForCurrentOpen = false;
-      this.googleErrorMessage = this.resolveErrorMessage(error) ?? 'No se pudo preparar el login con Google';
+      this.hasGoogleSetupError = true;
+      await this.showLoginErrorToast(this.resolveErrorMessage(error) ?? 'No se pudo preparar el login con Google');
     } finally {
       this.isGoogleLoading = false;
     }
@@ -259,14 +261,13 @@ export class LoginModalComponent implements OnChanges {
 
     if (!token || this.isSubmitting) {
       if (!token) {
-        this.errorMessage = 'No se pudo obtener el token de Google';
+        void this.showLoginErrorToast('No se pudo obtener el token de Google');
       }
 
       return;
     }
 
     this.isSubmitting = true;
-    this.errorMessage = '';
 
     this.userService.loginGoogle(token).pipe(take(1)).subscribe((result) => {
       this.isSubmitting = false;
@@ -278,7 +279,7 @@ export class LoginModalComponent implements OnChanges {
         return;
       }
 
-      this.errorMessage = result.message ?? 'No se pudo iniciar sesion con Google';
+      void this.showLoginErrorToast(result.message ?? 'No se pudo iniciar sesion con Google');
     });
   }
 

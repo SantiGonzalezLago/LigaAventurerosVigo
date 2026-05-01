@@ -64,7 +64,6 @@ export class UserDetailModalComponent {
   public banPermanent = true;
   public banDateEnd = '';
   public banReason = '';
-  public banFormError = '';
 
   private requestSequence = 0;
   private hasEmittedClose = false;
@@ -343,7 +342,6 @@ export class UserDetailModalComponent {
   public onBanPermanentChange(event: CustomEvent<{ checked: boolean }>): void {
     const checked = event.detail?.checked ?? false;
     this.banPermanent = checked;
-    this.banFormError = '';
 
     if (checked) {
       this.banDateEnd = '';
@@ -352,7 +350,6 @@ export class UserDetailModalComponent {
 
   public onBanDateEndChange(event: Event): void {
     this.banDateEnd = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.banFormError = '';
   }
 
   public adjustBanDateEnd(direction: 1 | -1, unit: 'week' | 'month'): void {
@@ -379,12 +376,10 @@ export class UserDetailModalComponent {
     }
 
     this.banDateEnd = this.toInputDate(nextDate);
-    this.banFormError = '';
   }
 
   public onBanReasonChange(event: Event): void {
     this.banReason = (event.target as HTMLTextAreaElement | null)?.value ?? '';
-    this.banFormError = '';
   }
 
   public createBan(): void {
@@ -393,33 +388,32 @@ export class UserDetailModalComponent {
     }
 
     if (this.user.banned) {
-      this.banFormError = 'El usuario ya tiene un ban activo';
+      void this.showErrorToast('El usuario ya tiene un ban activo');
       return;
     }
 
     const reason = this.banReason.trim();
     if (!reason) {
-      this.banFormError = 'Debes indicar un motivo para el ban';
+      void this.showErrorToast('Debes indicar un motivo para el ban');
       return;
     }
 
     let dateEnd: string | null = null;
     if (!this.banPermanent) {
       if (!this.banDateEnd) {
-        this.banFormError = 'Debes indicar una fecha fin para un ban temporal';
+        void this.showErrorToast('Debes indicar una fecha fin para un ban temporal');
         return;
       }
 
       const parsedDate = new Date(this.banDateEnd);
       if (Number.isNaN(parsedDate.getTime())) {
-        this.banFormError = 'La fecha fin no es valida';
+        void this.showErrorToast('La fecha fin no es valida');
         return;
       }
 
       dateEnd = this.banDateEnd;
     }
 
-    this.banFormError = '';
     this.isCreatingBan = true;
 
     this.api
@@ -450,8 +444,7 @@ export class UserDetailModalComponent {
             this.userService.logout();
           }
 
-          this.banFormError = this.getToggleErrorMessage(error, 'No se pudo banear al usuario');
-          await this.showErrorToast(this.banFormError);
+          await this.showErrorToast(this.getToggleErrorMessage(error, 'No se pudo banear al usuario'));
           this.isCreatingBan = false;
         },
         complete: () => {
@@ -495,7 +488,6 @@ export class UserDetailModalComponent {
     }
 
     this.isUnbanning = true;
-    this.banFormError = '';
 
     this.api
       .get<{ message: string; uid: string; lifted: number }>(`admin/unban/${encodeURIComponent(this.uid)}`)
@@ -520,7 +512,6 @@ export class UserDetailModalComponent {
           }
 
           const message = this.getToggleErrorMessage(error, 'No se pudo desbloquear al usuario');
-          this.banFormError = message;
           await this.showErrorToast(message);
           this.isUnbanning = false;
         },
@@ -566,7 +557,6 @@ export class UserDetailModalComponent {
     this.banPermanent = false;
     this.banDateEnd = '';
     this.banReason = '';
-    this.banFormError = '';
   }
 
   private async reloadCurrentUserData(): Promise<void> {

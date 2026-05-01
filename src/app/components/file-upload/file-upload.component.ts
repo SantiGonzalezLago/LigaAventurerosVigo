@@ -45,11 +45,9 @@ export class FileUploadComponent implements OnChanges {
   public fileUrl = '';
   public isFetchingUrl = false;
   public isDragOver = false;
-  public errorMessage = '';
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes['isOpen']?.currentValue) {
-      this.errorMessage = '';
       this.fileUrl = '';
     }
   }
@@ -398,11 +396,10 @@ export class FileUploadComponent implements OnChanges {
   }
 
   private setError(message: string): void {
-    this.errorMessage = message;
     this.fileError.emit(message);
   }
 
   private clearError(): void {
-    this.errorMessage = '';
+    this.fileError.emit('');
   }
 }

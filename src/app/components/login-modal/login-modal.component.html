@@ -16,7 +16,6 @@
         <ion-input
           [(ngModel)]="user"
           [disabled]="isSubmitting"
-          (ngModelChange)="clearErrorMessage()"
           (keyup.enter)="login()"
           autocomplete="username"
           placeholder="Email"
@@ -26,7 +25,6 @@
         <ion-input
           [(ngModel)]="password"
           [disabled]="isSubmitting"
-          (ngModelChange)="clearErrorMessage()"
           (keyup.enter)="login()"
           autocomplete="password"
           [type]="showPassword ? 'text' : 'password'"
@@ -42,9 +40,6 @@
           <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
         </ion-button>
       </ion-item>
-      @if (errorMessage) {
-        <ion-text color="danger" class="login-error">{{ errorMessage }}</ion-text>
-      }
       <ion-button expand="block" [disabled]="isSubmitting" (click)="login()">Entrar</ion-button>
 
       <div class="separator" aria-hidden="true">
@@ -56,8 +51,7 @@
           <ion-text color="medium" class="google-status">Preparando acceso con Google...</ion-text>
         }
 
-        @if (googleErrorMessage) {
-          <ion-text color="danger" class="login-error">{{ googleErrorMessage }}</ion-text>
+        @if (hasGoogleSetupError) {
           <ion-button fill="clear" size="small" [disabled]="isGoogleLoading" (click)="retryGoogleSetup()">
             Reintentar Google
           </ion-button>

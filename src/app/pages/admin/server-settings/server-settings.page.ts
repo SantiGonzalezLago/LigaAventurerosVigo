@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { IonContent, IonIcon } from '@ionic/angular/standalone';
+import { ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { checkmarkOutline } from 'ionicons/icons';
 import { take, catchError, of } from 'rxjs';
@@ -30,11 +31,11 @@ interface Setting {
 export class ServerSettingsPage extends AdminPageTemplate {
   private readonly api = inject(ApiService);
   private readonly pageHeaderService = inject(PageHeaderService);
+  private readonly toastController = inject(ToastController);
 
   settings: Setting[] = [];
   drafts: Record<string, string> = {};
   saving: Record<string, boolean> = {};
-  saveError: Record<string, string | null> = {};
   loading = false;
   error: string | null = null;
   tooltipKey: string | null = null;
@@ -68,11 +69,9 @@ export class ServerSettingsPage extends AdminPageTemplate {
         this.settings = response.settings;
         this.drafts = {};
         this.saving = {};
-        this.saveError = {};
         for (const s of this.settings) {
           this.drafts[s.key] = s.value;
           this.saving[s.key] = false;
-          this.saveError[s.key] = null;
         }
       });
   }
@@ -85,7 +84,6 @@ export class ServerSettingsPage extends AdminPageTemplate {
   save(key: string): void {
     if (!this.isDirty(key) || this.saving[key]) return;
     this.saving[key] = true;
-    this.saveError[key] = null;
 
     this.api.post<{ message: string; key: string; value: string }, { key: string; value: string }>(
       'admin/settings/update',
@@ -101,7 +99,7 @@ export class ServerSettingsPage extends AdminPageTemplate {
             err instanceof HttpErrorResponse && err.error?.message
               ? err.error.message
               : 'Error al guardar.';
-          this.saveError[key] = msg;
+          void this.showErrorToast(msg);
           this.saving[key] = false;
           return of<{ message: string; key: string; value: string } | null>(null);
         })
@@ -123,6 +121,17 @@ export class ServerSettingsPage extends AdminPageTemplate {
 
   hideTooltip(): void {
     this.tooltipKey = null;
+  }
+
+  private async showErrorToast(message: string): Promise<void> {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2200,
+      position: 'bottom',
+      color: 'danger',
+    });
+
+    await toast.present();
   }
 
   retry(): void {
