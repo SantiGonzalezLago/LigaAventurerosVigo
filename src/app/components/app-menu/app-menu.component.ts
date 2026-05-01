@@ -2,7 +2,7 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { moonOutline, phonePortraitOutline, closeCircle, compass, shieldCheckmark, sunnyOutline, settingsOutline, colorPaletteOutline, logoInstagram, logoWhatsapp } from 'ionicons/icons';
+import { moonOutline, phonePortraitOutline, closeCircle, compass, shieldCheckmark, sunnyOutline, settingsOutline, colorPaletteOutline, logoInstagram, logoWhatsapp, star } from 'ionicons/icons';
 import { ActionSheetController } from '@ionic/angular';
 import {
   IonContent,
@@ -21,7 +21,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { environment } from '../../../environments/environment';
 import { KofiSupportCardComponent } from '../kofi-support-card/kofi-support-card.component';
 
-addIcons({ colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, compass, shieldCheckmark, sunnyOutline, settingsOutline, logoInstagram, logoWhatsapp });
+addIcons({ colorPaletteOutline, moonOutline, phonePortraitOutline, closeCircle, compass, shieldCheckmark, sunnyOutline, settingsOutline, logoInstagram, logoWhatsapp, star });
 
 @Component({
   selector: 'app-menu',

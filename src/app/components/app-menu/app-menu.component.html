@@ -33,7 +33,14 @@
                     }
                     <span class="menu-badge-name">{{ user.name }}</span>
                     <span class="menu-badge-roles">
-                      @if (user.master) {
+                      @if (user.roles.includes('vip')) {
+                        <ion-icon
+                          class="user-role-icon user-role-icon-vip"
+                          name="star"
+                          aria-label="VIP"
+                        ></ion-icon>
+                      }
+                      @if (user.roles.includes('master')) {
                         <ion-icon
                           class="user-role-icon user-role-icon-master"
                           name="compass"
@@ -41,7 +48,7 @@
                           aria-label="Master"
                         ></ion-icon>
                       }
-                      @if (user.admin) {
+                      @if (user.roles.includes('admin')) {
                         <ion-icon
                           class="user-role-icon user-role-icon-admin"
                           name="shield-checkmark"

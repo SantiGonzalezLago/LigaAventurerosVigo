@@ -30,6 +30,12 @@
                   <span class="sort-indicator">{{ getSortIcon('name') }}</span>
                 }
               </th>
+              <th class="vip-col sortable" (click)="onSort('vip')">
+                <ion-icon name="star"></ion-icon>
+                @if (isSorted('vip')) {
+                  <span class="sort-indicator">{{ getSortIcon('vip') }}</span>
+                }
+              </th>
               <th class="master-col sortable" (click)="onSort('master')" title="Master">
                 <ion-icon name="compass"></ion-icon>
                 @if (isSorted('master')) {
@@ -76,9 +82,17 @@
                     }
                   </div>
                 </td>
+                <td class="vip-cell">
+                  <ion-icon
+                    [class.inactive]="!user.roles.includes('vip')"
+                    class="role-icon role-icon-vip"
+                    name="star"
+                    aria-label="VIP"
+                  ></ion-icon>
+                </td>
                 <td class="master-cell">
                   <ion-icon
-                    [class.inactive]="!user.master"
+                    [class.inactive]="!user.roles.includes('master')"
                     class="role-icon role-icon-master"
                     name="compass"
                     title="Master"
@@ -86,7 +100,7 @@
                 </td>
                 <td class="admin-cell">
                   <ion-icon
-                    [class.inactive]="!user.admin"
+                    [class.inactive]="!user.roles.includes('admin')"
                     class="role-icon role-icon-admin"
                     name="shield-checkmark"
                     title="Admin"

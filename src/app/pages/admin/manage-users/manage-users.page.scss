@@ -158,7 +158,9 @@
     .master-col,
     .master-cell,
     .admin-col,
-    .admin-cell {
+    .admin-cell,
+    .vip-col,
+    .vip-cell {
       width: 60px;
       text-align: center;
     }
@@ -212,8 +214,17 @@
     display: inline-block;
     transition: opacity 0.2s ease;
 
-    &.role-icon-master {
+    &.role-icon-vip {
       color: var(--ion-color-warning-shade);
+
+      &.inactive {
+        color: var(--ion-color-medium);
+        opacity: 0.3;
+      }
+    }
+
+    &.role-icon-master {
+      color: #1aa34a;
 
       &.inactive {
         color: var(--ion-color-medium);

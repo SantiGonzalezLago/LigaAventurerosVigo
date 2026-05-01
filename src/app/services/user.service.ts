@@ -11,8 +11,7 @@ export interface UserData {
   email: string;
   avatar: string | null;
   verified: boolean;
-  master: boolean;
-  admin: boolean;
+  roles: string[];
 }
 
 interface UserState {
@@ -71,12 +70,12 @@ export class UserService {
 
   public hasMasterAccess(): boolean {
     const activeUser = this.getActiveUser();
-    return activeUser ? (activeUser.master || activeUser.admin) : false;
+    return activeUser ? (activeUser.roles.includes('master') || activeUser.roles.includes('admin')) : false;
   }
 
   public hasAdminAccess(): boolean {
     const activeUser = this.getActiveUser();
-    return activeUser ? activeUser.admin : false;
+    return activeUser ? activeUser.roles.includes('admin') : false;
   }
 
   public getUserByUid(uid: string): UserData | null {
@@ -449,8 +448,8 @@ export class UserService {
       typeof candidate['email'] === 'string' &&
       (typeof candidate['avatar'] === 'string' || candidate['avatar'] === null) &&
       typeof candidate['verified'] === 'boolean' &&
-      typeof candidate['master'] === 'boolean' &&
-      typeof candidate['admin'] === 'boolean'
+      Array.isArray(candidate['roles']) &&
+      (candidate['roles'] as unknown[]).every((role) => typeof role === 'string')
     );
   }
 

@@ -8,7 +8,7 @@ import {
   IonIcon,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { compass, shieldCheckmark, alertCircleOutline, searchOutline } from 'ionicons/icons';
+import { compass, shieldCheckmark, alertCircleOutline, searchOutline, star } from 'ionicons/icons';
 import { BehaviorSubject, Subject, catchError, debounceTime, distinctUntilChanged, take, takeUntil, of } from 'rxjs';
 import { AdminPageTemplate } from '../../../templates/admin-page.template';
 import { ApiService } from '../../../services/api.service';
@@ -18,7 +18,7 @@ import { LoaderComponent } from '../../../components/loader/loader.component';
 import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
 import { UserDetailModalComponent } from './user-detail-modal/user-detail-modal.component';
 
-addIcons({ compass, shieldCheckmark, alertCircleOutline, searchOutline });
+addIcons({ compass, shieldCheckmark, alertCircleOutline, searchOutline, star });
 
 @Component({
   selector: 'app-manage-users',
@@ -143,7 +143,7 @@ export class ManageUsersPage extends AdminPageTemplate implements OnInit {
     this.userModalRequest = null;
   }
 
-  public onUserRoleChange(update: { uid: string; admin?: boolean; master?: boolean; banned?: boolean }): void {
+  public onUserRoleChange(update: { uid: string; roles?: string[]; banned?: boolean }): void {
     if (!update?.uid) {
       return;
     }
@@ -156,8 +156,7 @@ export class ManageUsersPage extends AdminPageTemplate implements OnInit {
 
       return {
         ...user,
-        ...(typeof update.admin === 'boolean' ? { admin: update.admin } : {}),
-        ...(typeof update.master === 'boolean' ? { master: update.master } : {}),
+        ...(Array.isArray(update.roles) ? { roles: update.roles } : {}),
         ...(typeof update.banned === 'boolean' ? { banned: update.banned } : {}),
       };
     });

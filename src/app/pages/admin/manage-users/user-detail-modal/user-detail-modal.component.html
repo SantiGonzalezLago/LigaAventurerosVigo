@@ -42,21 +42,31 @@
 
           <div class="role-toggle-row">
             <ion-button
+              class="role-toggle-btn role-toggle-btn-vip"
+              [class.inactive]="!hasRole('vip')"
+              fill="solid"
+              (click)="toggleVip()"
+              [disabled]="!user.verified || user.banned || isTogglingVip || isTogglingAdmin || isTogglingMaster"
+            >
+              <ion-icon name="star" aria-hidden="true"></ion-icon>
+            </ion-button>
+
+            <ion-button
               class="role-toggle-btn role-toggle-btn-admin"
-              [class.inactive]="!user.admin"
+              [class.inactive]="!hasRole('admin')"
               fill="solid"
               (click)="toggleAdmin()"
-              [disabled]="!user.verified || user.banned || isRequestedUserActive || isTogglingAdmin || isTogglingMaster"
+              [disabled]="!user.verified || user.banned || isRequestedUserActive || isTogglingVip || isTogglingAdmin || isTogglingMaster"
             >
               Administrador
             </ion-button>
 
             <ion-button
               class="role-toggle-btn role-toggle-btn-master"
-              [class.inactive]="!user.master"
+              [class.inactive]="!hasRole('master')"
               fill="solid"
               (click)="toggleMaster()"
-              [disabled]="!user.verified || user.banned || isTogglingMaster || isTogglingAdmin"
+              [disabled]="!user.verified || user.banned || isTogglingVip || isTogglingMaster || isTogglingAdmin"
             >
               Master
             </ion-button>
@@ -79,7 +89,7 @@
             class="impersonate-button"
             color="danger"
             (click)="impersonateUser()"
-            [disabled]="user.banned || user.admin"
+            [disabled]="user.banned || hasRole('admin')"
           >
             Suplantar usuario
           </ion-button>

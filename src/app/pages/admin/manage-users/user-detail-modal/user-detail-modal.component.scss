@@ -69,9 +69,14 @@
   --color: var(--ion-color-admin-contrast);
 }
 
-.role-toggle-btn-master {
+.role-toggle-btn-vip {
   --background: var(--ion-color-warning);
   --color: var(--ion-color-warning-contrast);
+}
+
+.role-toggle-btn-master {
+  --background: #66c97d;
+  --color: #000;
 }
 
 .role-toggle-btn.inactive {

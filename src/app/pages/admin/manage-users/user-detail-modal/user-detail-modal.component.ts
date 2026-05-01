@@ -13,13 +13,13 @@ import {
 } from '@ionic/angular/standalone';
 import { AlertController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { closeOutline } from 'ionicons/icons';
+import { closeOutline, star } from 'ionicons/icons';
 import { firstValueFrom, take } from 'rxjs';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
 import { ApiService } from '../../../../services/api.service';
 import { UserService } from 'src/app/services/user.service';
 
-addIcons({ closeOutline });
+addIcons({ closeOutline, star });
 
 @Component({
   selector: 'app-user-detail-modal',
@@ -46,12 +46,13 @@ export class UserDetailModalComponent {
   private readonly toastController = inject(ToastController);
   @Input() openRequest: { uid: string; eventId: number } | null = null;
   @Output() close = new EventEmitter<void>();
-  @Output() userRoleChange = new EventEmitter<{ uid: string; admin?: boolean; master?: boolean; banned?: boolean }>();
+  @Output() userRoleChange = new EventEmitter<{ uid: string; roles?: string[]; banned?: boolean }>();
   @ViewChild(IonModal) private modal?: IonModal;
 
   public isOpen = false;
   public isLoading = false;
   public isRequestedUserActive = false;
+  public isTogglingVip = false;
   public isTogglingAdmin = false;
   public isTogglingMaster = false;
   public isCreatingBan = false;
@@ -82,6 +83,7 @@ export class UserDetailModalComponent {
     this.isLoading = true;
     this.isOpen = false;
     this.isRequestedUserActive = this.userService.getActiveUid() === uid;
+    this.isTogglingVip = false;
     this.isTogglingAdmin = false;
     this.isTogglingMaster = false;
     this.uid = uid;
@@ -97,7 +99,10 @@ export class UserDetailModalComponent {
         return;
       }
 
-      this.user = response.user;
+      this.user = {
+        ...response.user,
+        roles: this.normalizeRoles(response?.user?.roles),
+      };
       this.bans = Array.isArray(response?.bans) ? response.bans : [];
 
       this.isOpen = true;
@@ -174,7 +179,7 @@ export class UserDetailModalComponent {
     }
 
     if (httpError?.status === 403) {
-      return 'No puedes modificar tus propios permisos de admin';
+      return 'No puedes modificar tus propios permisos';
     }
 
     if (httpError?.status && httpError.status > 0) {
@@ -208,11 +213,11 @@ export class UserDetailModalComponent {
       return;
     }
 
-    const nextAdmin = !this.user.admin;
+    const nextAdmin = !this.hasRole('admin');
     this.isTogglingAdmin = true;
 
     this.api
-      .post<{ message: string; uid: string; admin: boolean }, { uid: string; state: number }>(
+      .post<{ message: string; uid: string; roles: string[] }, { uid: string; state: number }>(
         'admin/toggle-admin',
         {
           uid: this.uid,
@@ -222,10 +227,10 @@ export class UserDetailModalComponent {
       .pipe(take(1))
       .subscribe({
         next: async (response) => {
-          this.user.admin = response.admin;
+          this.user.roles = this.normalizeRoles(response.roles);
           this.userRoleChange.emit({
             uid: response.uid || this.uid,
-            admin: response.admin,
+            roles: this.user.roles,
           });
           await this.showSuccessToast('Permiso de administrador actualizado');
         },
@@ -247,16 +252,60 @@ export class UserDetailModalComponent {
       });
   }
 
+  public toggleVip(): void {
+    if (!this.user || this.isTogglingVip) {
+      return;
+    }
+
+    const nextVip = !this.hasRole('vip');
+    this.isTogglingVip = true;
+
+    this.api
+      .post<{ message: string; uid: string; roles: string[] }, { uid: string; state: number }>(
+        'admin/toggle-vip',
+        {
+          uid: this.uid,
+          state: nextVip ? 1 : 0,
+        }
+      )
+      .pipe(take(1))
+      .subscribe({
+        next: async (response) => {
+          this.user.roles = this.normalizeRoles(response.roles);
+          this.userRoleChange.emit({
+            uid: response.uid || this.uid,
+            roles: this.user.roles,
+          });
+          await this.showSuccessToast('Rol actualizado');
+        },
+        error: async (error: unknown) => {
+          const httpError = error instanceof HttpErrorResponse ? error : null;
+
+          if (httpError?.status === 401) {
+            this.userService.logout();
+          }
+
+          this.isTogglingVip = false;
+          await this.showErrorToast(
+            this.getToggleErrorMessage(error, 'No se pudo actualizar el rol')
+          );
+        },
+        complete: () => {
+          this.isTogglingVip = false;
+        },
+      });
+  }
+
   public toggleMaster(): void {
     if (!this.user || this.isTogglingMaster) {
       return;
     }
 
-    const nextMaster = !this.user.master;
+    const nextMaster = !this.hasRole('master');
     this.isTogglingMaster = true;
 
     this.api
-      .post<{ message: string; uid: string; master: boolean }, { uid: string; state: number }>(
+      .post<{ message: string; uid: string; roles: string[] }, { uid: string; state: number }>(
         'admin/toggle-master',
         {
           uid: this.uid,
@@ -266,10 +315,10 @@ export class UserDetailModalComponent {
       .pipe(take(1))
       .subscribe({
         next: async (response) => {
-          this.user.master = response.master;
+          this.user.roles = this.normalizeRoles(response.roles);
           this.userRoleChange.emit({
             uid: response.uid || this.uid,
-            master: response.master,
+            roles: this.user.roles,
           });
           await this.showSuccessToast('Permiso de master actualizado');
         },
@@ -484,6 +533,7 @@ export class UserDetailModalComponent {
   public async closeModal(): Promise<void> {
     this.isOpen = false;
     this.isLoading = false;
+    this.isTogglingVip = false;
     this.isTogglingAdmin = false;
     this.isTogglingMaster = false;
     this.isCreatingBan = false;
@@ -525,8 +575,23 @@ export class UserDetailModalComponent {
     }
 
     const response = await this.prepareUserData(this.uid);
-    this.user = response.user;
+    this.user = {
+      ...response.user,
+      roles: this.normalizeRoles(response?.user?.roles),
+    };
     this.bans = Array.isArray(response?.bans) ? response.bans : [];
+  }
+
+  public hasRole(role: 'vip' | 'admin' | 'master'): boolean {
+    return this.normalizeRoles(this.user?.roles).includes(role);
+  }
+
+  private normalizeRoles(roles: unknown): string[] {
+    if (!Array.isArray(roles)) {
+      return [];
+    }
+
+    return roles.filter((role): role is string => typeof role === 'string');
   }
 
   public getBanEndLabel(ban: any): string {
