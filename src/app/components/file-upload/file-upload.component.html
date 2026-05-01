@@ -1,0 +1,67 @@
+<ion-modal class="file-upload-options-modal" [isOpen]="isOpen" (didDismiss)="onDidDismiss()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{ title }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button class="round-button" fill="clear" aria-label="Cerrar" (click)="onDidDismiss()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <div class="options-body ion-padding">
+      <div
+        class="drop-panel"
+        [class.drop-panel-active]="isDragOver"
+        role="button"
+        tabindex="0"
+        aria-label="Arrastra un archivo o pulsa para seleccionarlo"
+        (click)="selectFromDevice()"
+        (keydown.enter)="selectFromDevice()"
+        (keydown.space)="selectFromDevice()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+      >
+        <ion-icon class="drop-panel-icon" name="cloud-upload-outline" aria-hidden="true"></ion-icon>
+        <p class="drop-panel-title">Seleccionar archivo</p>
+        <p class="drop-panel-subtitle">Arrastra un archivo aqui o pulsa para abrir el selector</p>
+      </div>
+
+      <div class="separator" aria-hidden="true">
+        <span>o</span>
+      </div>
+
+      <div class="url-upload-row">
+        <input
+          id="file-upload-url-input"
+          class="url-input"
+          type="url"
+          autocomplete="off"
+          placeholder="https://..."
+          [(ngModel)]="fileUrl"
+          (keyup.enter)="uploadFromUrl()"
+        />
+        @if (fileUrl) {
+          <ion-button type="button" expand="block" (click)="uploadFromUrl()" [disabled]="isFetchingUrl">
+            {{ isFetchingUrl ? 'Cargando...' : 'Cargar' }}
+          </ion-button>
+        }
+      </div>
+
+      @if (errorMessage) {
+        <p class="file-upload-error" role="alert">{{ errorMessage }}</p>
+      }
+    </div>
+
+    <input
+      #fileInput
+      class="hidden-file-input"
+      type="file"
+      [accept]="acceptAttribute"
+      (change)="onFileSelected($event)"
+    />
+  </ng-template>
+</ion-modal>

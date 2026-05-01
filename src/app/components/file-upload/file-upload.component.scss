@@ -1,0 +1,117 @@
+.options-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.drop-panel {
+  width: 100%;
+  border: 1px dashed rgba(var(--ion-color-medium-rgb), 0.55);
+  border-radius: 12px;
+  background: rgba(var(--ion-color-step-50-rgb), 0.45);
+  padding: 14px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.drop-panel:hover {
+  border-color: rgba(var(--ion-color-primary-rgb), 0.55);
+}
+
+.drop-panel:focus-visible {
+  outline: 2px solid rgba(var(--ion-color-primary-rgb), 0.45);
+  outline-offset: 2px;
+}
+
+.drop-panel-active {
+  border-color: rgba(var(--ion-color-primary-rgb), 0.8);
+  background: rgba(var(--ion-color-primary-rgb), 0.09);
+}
+
+.drop-panel-icon {
+  font-size: 1.25rem;
+  color: var(--ion-color-primary);
+}
+
+.drop-panel-title {
+  margin: 6px 0 2px;
+  font-size: 0.96rem;
+  font-weight: 600;
+  color: var(--ion-text-color);
+}
+
+.drop-panel-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ion-color-medium-shade);
+}
+
+.separator {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  color: var(--ion-color-medium-shade);
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  height: 1px;
+  background: var(--ion-color-medium-tint);
+  opacity: 0.45;
+}
+
+.url-upload-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.url-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ion-color-medium-shade);
+}
+
+.url-input {
+  width: 100%;
+  border: 1px solid rgba(var(--ion-color-medium-rgb), 0.4);
+  border-radius: 10px;
+  background: rgba(var(--ion-color-step-50-rgb), 0.35);
+  color: var(--ion-text-color);
+  padding: 10px 12px;
+  outline: none;
+}
+
+.url-input:focus-visible {
+  border-color: rgba(var(--ion-color-primary-rgb), 0.7);
+  box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.14);
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.file-upload-error {
+  text-align: center;
+  color: var(--ion-color-danger);
+  font-size: 0.9rem;
+}
+
+.file-upload-options-modal {
+  --width: min(92vw, 540px);
+  --height: auto;
+  --border-radius: 14px;
+}
+
+@media (max-width: 640px) {
+  .url-label {
+    justify-content: center;
+  }
+}

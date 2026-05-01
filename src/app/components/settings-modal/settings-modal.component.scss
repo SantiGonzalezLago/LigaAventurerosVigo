@@ -19,11 +19,6 @@
   width: min(100%, 560px);
 }
 
-.avatar-row {
-  display: flex;
-  align-items: center;
-}
-
 .avatar-picker-button {
   position: relative;
   display: inline-flex;
@@ -81,10 +76,6 @@
 
 .avatar-add-badge ion-icon {
   font-size: 0.9rem;
-}
-
-.hidden-file-input {
-  display: none;
 }
 
 .settings-uid {

@@ -14,27 +14,18 @@
     <ion-content>
       <div class="modal-body ion-padding">
         <div class="avatar-section">
-          <div class="avatar-row">
-            <button type="button" class="avatar-picker-button" (click)="openAvatarPicker()" aria-label="Cambiar avatar">
-              @if (avatarPreview) {
-                <img class="avatar-preview" [src]="avatarPreview" alt="Avatar del usuario" />
-              } @else {
-                <div class="avatar-preview avatar-fallback" aria-hidden="true">
-                  <ion-icon class="avatar-fallback-user" name="person-circle-outline"></ion-icon>
-                </div>
-              }
-              <span class="avatar-add-badge" aria-hidden="true">
-                <ion-icon name="add-outline"></ion-icon>
-              </span>
-            </button>
-          </div>
-          <input
-            #avatarFileInput
-            class="hidden-file-input"
-            type="file"
-            accept="image/*"
-            (change)="onAvatarFileSelected($event)"
-          />
+          <button type="button" class="avatar-picker-button" (click)="openAvatarUploadModal()" aria-label="Cambiar avatar">
+            @if (avatarPreview) {
+              <img class="avatar-preview" [src]="avatarPreview" alt="Avatar del usuario" />
+            } @else {
+              <div class="avatar-preview avatar-fallback" aria-hidden="true">
+                <ion-icon class="avatar-fallback-user" name="person-circle-outline"></ion-icon>
+              </div>
+            }
+            <span class="avatar-add-badge" aria-hidden="true">
+              <ion-icon name="add-outline"></ion-icon>
+            </span>
+          </button>
         </div>
 
         <ion-item>
@@ -80,3 +71,12 @@
     </ion-content>
   </ng-template>
 </ion-modal>
+
+<app-file-upload
+  [isOpen]="isAvatarUploadModalOpen"
+  type="image"
+  [image_max_dimension]="256"
+  (close)="closeAvatarUploadModal()"
+  (fileSelected)="onAvatarSelected($event)"
+  (fileError)="onAvatarUploadError($event)"
+></app-file-upload>

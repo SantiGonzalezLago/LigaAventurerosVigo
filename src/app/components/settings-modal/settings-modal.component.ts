@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, ViewChild, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonButton,
@@ -16,6 +16,7 @@ import { AlertController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { addOutline, closeOutline, personCircleOutline } from 'ionicons/icons';
 import { firstValueFrom, take } from 'rxjs';
+import { FileUploadComponent } from 'src/app/components/file-upload/file-upload.component';
 import { UserData, UserService } from 'src/app/services/user.service';
 
 addIcons({ addOutline, closeOutline, personCircleOutline });
@@ -24,7 +25,20 @@ addIcons({ addOutline, closeOutline, personCircleOutline });
   selector: 'app-settings-modal',
   templateUrl: './settings-modal.component.html',
   styleUrls: ['./settings-modal.component.scss'],
-  imports: [FormsModule, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonModal, IonTitle, IonToolbar],
+  imports: [
+    FormsModule,
+    IonButton,
+    IonButtons,
+    IonContent,
+    IonHeader,
+    IonIcon,
+    IonInput,
+    IonItem,
+    IonModal,
+    IonTitle,
+    IonToolbar,
+    FileUploadComponent,
+  ],
 })
 export class SettingsModalComponent implements OnChanges {
   private readonly userService = inject(UserService);
@@ -32,14 +46,13 @@ export class SettingsModalComponent implements OnChanges {
   private readonly alertController = inject(AlertController);
   private activeUser: UserData | null = null;
 
-  @ViewChild('avatarFileInput') private avatarFileInput?: ElementRef<HTMLInputElement>;
-
   @Input() isOpen = false;
   @Output() close = new EventEmitter<void>();
 
   public uid = '';
   public username = '';
   public avatarPreview = '';
+  public isAvatarUploadModalOpen = false;
   public password = '';
   public passwordRepeat = '';
   private avatarFile: File | null = null;
@@ -51,74 +64,33 @@ export class SettingsModalComponent implements OnChanges {
   }
 
   public onDidDismiss(): void {
+    this.isAvatarUploadModalOpen = false;
     this.resetForm();
     this.close.emit();
   }
 
   public closeModal(): void {
+    this.isAvatarUploadModalOpen = false;
     this.resetForm();
     this.close.emit();
   }
 
-  public openAvatarPicker(): void {
-    this.avatarFileInput?.nativeElement.click();
+  public openAvatarUploadModal(): void {
+    this.isAvatarUploadModalOpen = true;
   }
 
-  public onAvatarFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
+  public closeAvatarUploadModal(): void {
+    this.isAvatarUploadModalOpen = false;
+  }
 
-    if (!file) {
-      return;
-    }
+  public onAvatarSelected(selection: { file: File; previewUrl: string; source: 'device' | 'url' }): void {
+    this.avatarFile = selection.file;
+    this.avatarPreview = selection.previewUrl;
+    this.isAvatarUploadModalOpen = false;
+  }
 
-    if (!file.type.startsWith('image/')) {
-      void this.showErrorToast('Selecciona un archivo de imagen válido');
-      input.value = '';
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = typeof reader.result === 'string' ? reader.result : '';
-      if (!result) {
-        void this.showErrorToast('No se pudo cargar la imagen seleccionada');
-        return;
-      }
-
-      const img = new Image();
-      img.onload = () => {
-        const MAX = 256;
-        const scale = Math.min(1, MAX / Math.max(img.width, img.height));
-        const w = Math.round(img.width * scale);
-        const h = Math.round(img.height * scale);
-
-        const canvas = document.createElement('canvas');
-        canvas.width = w;
-        canvas.height = h;
-        canvas.getContext('2d')!.drawImage(img, 0, 0, w, h);
-
-        const dataUrl = canvas.toDataURL('image/png');
-        const avatarFile = this.dataUrlToFile(dataUrl, `avatar-${Date.now()}.png`);
-        if (!avatarFile) {
-          void this.showErrorToast('No se pudo procesar la imagen seleccionada');
-          return;
-        }
-
-        this.avatarPreview = dataUrl;
-        this.avatarFile = avatarFile;
-      };
-      img.onerror = () => {
-        void this.showErrorToast('No se pudo procesar la imagen seleccionada');
-      };
-      img.src = result;
-    };
-    reader.onerror = () => {
-      void this.showErrorToast('No se pudo leer la imagen seleccionada');
-    };
-
-    reader.readAsDataURL(file);
-    input.value = '';
+  public onAvatarUploadError(message: string): void {
+    void this.showErrorToast(message);
   }
 
   public async saveChanges(): Promise<void> {
@@ -195,6 +167,7 @@ export class SettingsModalComponent implements OnChanges {
     this.uid = '';
     this.username = '';
     this.avatarPreview = '';
+    this.isAvatarUploadModalOpen = false;
     this.password = '';
     this.passwordRepeat = '';
     this.avatarFile = null;
@@ -273,31 +246,5 @@ export class SettingsModalComponent implements OnChanges {
     }
 
     return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
-  }
-
-  private dataUrlToFile(dataUrl: string, fileName: string): File | null {
-    const dataUrlParts = dataUrl.split(',');
-    if (dataUrlParts.length !== 2) {
-      return null;
-    }
-
-    const metadata = dataUrlParts[0];
-    const base64Data = dataUrlParts[1];
-    const mimeMatch = metadata.match(/^data:(.*?);base64$/i);
-    if (!mimeMatch?.[1]) {
-      return null;
-    }
-
-    try {
-      const binary = atob(base64Data);
-      const bytes = new Uint8Array(binary.length);
-      for (let i = 0; i < binary.length; i += 1) {
-        bytes[i] = binary.charCodeAt(i);
-      }
-
-      return new File([bytes], fileName, { type: mimeMatch[1] });
-    } catch {
-      return null;
-    }
   }
 }
