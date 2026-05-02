@@ -1,4 +1,7 @@
 <ion-app>
+  @if (showSplash) {
+    <app-splash-screen (dismissed)="onSplashDismissed()"></app-splash-screen>
+  }
   <app-menu [loginModalOpener]="loginModalOpener" [settingsModalOpener]="settingsModalOpener"></app-menu>
   <ion-router-outlet id="main-content" (activate)="onRouteActivate($event)"></ion-router-outlet>
   <app-login-modal [isOpen]="isLoginModalOpen" (close)="closeLoginModal()"></app-login-modal>

@@ -1,0 +1,10 @@
+<div
+  class="splash-overlay"
+  [class.fading]="fading"
+  (click)="dismiss()"
+>
+  <div class="splash-content">
+    <span class="splash-logo">Liga de Aventureros de Vigo</span>
+  </div>
+  <span class="splash-hint">{{ isTouchScreen ? 'Toca para continuar' : 'Haz clic para continuar' }}</span>
+</div>

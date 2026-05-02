@@ -3,6 +3,7 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AppMenuComponent } from './components/app-menu/app-menu.component';
 import { LoginModalComponent } from './components/login-modal/login-modal.component';
 import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
+import { SplashScreenComponent } from './components/splash-screen/splash-screen.component';
 import { ThemeService } from './services/theme.service';
 
 interface LoginModalRequester {
@@ -12,10 +13,11 @@ interface LoginModalRequester {
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  imports: [IonApp, IonRouterOutlet, AppMenuComponent, LoginModalComponent, SettingsModalComponent],
+  imports: [IonApp, IonRouterOutlet, AppMenuComponent, LoginModalComponent, SettingsModalComponent, SplashScreenComponent],
 })
 export class AppComponent {
   private themeService = inject(ThemeService);
+  public showSplash = true;
   public isLoginModalOpen = false;
   public isSettingsModalOpen = false;
   public readonly loginModalOpener = () => this.openLoginModal();
@@ -39,6 +41,10 @@ export class AppComponent {
 
   public closeSettingsModal(): void {
     this.isSettingsModalOpen = false;
+  }
+
+  public onSplashDismissed(): void {
+    this.showSplash = false;
   }
 
   public onRouteActivate(component: unknown): void {
