@@ -39,6 +39,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/admin/upload-files-log/upload-files-log.page').then((m) => m.UploadFilesLogPage),
         canActivate: [AdminGuard],
       },
+      {
+        path: 'admin/game-systems',
+        loadComponent: () => import('./pages/admin/manage-game-systems/manage-game-systems.page').then((m) => m.ManageGameSystemsPage),
+        canActivate: [AdminGuard],
+      },
       // Redirecciones
       {
         path: '',

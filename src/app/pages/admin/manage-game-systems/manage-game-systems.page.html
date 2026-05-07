@@ -1,0 +1,55 @@
+<ion-content class="page-content manage-game-systems-page" fullscreen>
+
+  @if (loading) {
+    <app-loader></app-loader>
+  }
+
+  @if (error && !loading) {
+    <app-error-state [message]="error" (retry)="loadSystems()"></app-error-state>
+  }
+
+  @if (!loading && !error) {
+    <div class="systems-list">
+      @if (systems.length === 0) {
+        <div class="empty-state">
+          <p>No hay sistemas de juego registrados.</p>
+        </div>
+      }
+      @for (system of systems; track system.id) {
+        <div class="system-row" [class.system-row-inactive]="!system.active">
+          <div class="system-icon-wrap">
+            @if (system.icon) {
+              <img class="system-icon" [src]="system.icon" [alt]="system.name" />
+            } @else {
+              <div class="system-icon-placeholder">{{ system.name.charAt(0).toUpperCase() }}</div>
+            }
+          </div>
+          <div class="system-info">
+            <span class="system-name">{{ system.name }}</span>
+            <span class="system-slug">
+              {{ system.slug }}
+              @if (!system.active) {
+                <span class="status-pill">Inactivo</span>
+              }
+            </span>
+          </div>
+          <button class="edit-btn" (click)="openEditSystemModal(system)" aria-label="Editar">
+            <ion-icon name="pencil-outline"></ion-icon>
+          </button>
+        </div>
+      }
+    </div>
+
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button (click)="openNewSystemModal()" aria-label="Añadir sistema">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  }
+
+</ion-content>
+
+<app-game-system-modal
+  [openRequest]="modalRequest"
+  (saved)="onModalSaved($event)"
+></app-game-system-modal>
