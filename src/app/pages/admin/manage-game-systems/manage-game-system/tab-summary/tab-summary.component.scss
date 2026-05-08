@@ -1,24 +1,7 @@
-:host {
-  --modal-width: 480px;
-}
-
-.game-system-modal {
-  --width: var(--modal-width);
-  --max-width: 95vw;
-  --height: auto;
-  --border-radius: 12px;
-}
-
-.modal-body {
+.summary-content {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 16px;
-}
-
-.modal-body ion-item {
-  --inner-border-width: 0;
-  --border-width: 0;
 }
 
 .field {
@@ -43,7 +26,8 @@
 .icon-field-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .icon-preview {
@@ -82,9 +66,8 @@
   font-weight: 500;
 }
 
-.modal-actions {
+.summary-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 8px;
+  margin-top: 4px;
 }

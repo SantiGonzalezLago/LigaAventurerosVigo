@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import {
   IonContent,
   IonFab,
@@ -38,6 +39,7 @@ addIcons({ addOutline, pencilOutline });
 export class ManageGameSystemsPage extends AdminPageTemplate implements OnInit {
   private readonly api = inject(ApiService);
   private readonly pageHeaderService = inject(PageHeaderService);
+  private readonly appRouter = inject(Router);
 
   loading = false;
   error: string | null = null;
@@ -105,6 +107,10 @@ export class ManageGameSystemsPage extends AdminPageTemplate implements OnInit {
         s.id === data.id ? { ...s, name: data.name, slug: data.slug, icon: data.icon, pc_limit: data.pc_limit, active: data.active } : s
       ));
     }
+  }
+
+  openSystemManagement(system: { id: number; name: string; slug: string; icon: string | null; pc_limit: number; active: boolean }): void {
+    this.appRouter.navigate(['/admin/game-systems', system.slug]);
   }
 
   private sortSystems(

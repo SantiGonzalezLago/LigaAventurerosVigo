@@ -1,0 +1,87 @@
+<div class="summary-content">
+  <div class="field">
+    <label class="field-label">Nombre</label>
+    <ion-item>
+      <ion-input
+        type="text"
+        [(ngModel)]="nameDraft"
+        (ngModelChange)="onNameInput()"
+        [disabled]="isSaving || loading"
+        aria-label="Nombre del sistema"
+      ></ion-input>
+    </ion-item>
+    @if (showErrors && !nameDraft.trim()) {
+      <span class="field-error">El nombre es obligatorio</span>
+    }
+  </div>
+
+  <div class="field">
+    <label class="field-label">Slug</label>
+    <ion-item>
+      <ion-input
+        type="text"
+        [(ngModel)]="slugDraft"
+        (ngModelChange)="onSlugInput()"
+        [disabled]="isSaving || loading"
+        aria-label="Slug del sistema"
+      ></ion-input>
+    </ion-item>
+    @if (showErrors && !slugDraft.trim()) {
+      <span class="field-error">El slug es obligatorio</span>
+    }
+  </div>
+
+  <div class="field">
+    <label class="field-label">Icono</label>
+    <div class="icon-field-row">
+      @if (iconPreviewUrl) {
+        <img class="icon-preview" [src]="iconPreviewUrl" alt="Vista previa del icono" />
+      } @else {
+        <div class="icon-placeholder">Sin icono</div>
+      }
+
+      <ion-button fill="outline" size="small" [disabled]="isSaving || loading" (click)="isFileUploadOpen = true">
+        {{ iconPreviewUrl ? 'Cambiar' : 'Seleccionar' }}
+      </ion-button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label">Límite de personajes por jugador</label>
+    <ion-item>
+      <ion-input
+        type="number"
+        min="0"
+        step="1"
+        [(ngModel)]="pcLimitDraft"
+        [disabled]="isSaving || loading"
+        aria-label="Límite de personajes por jugador"
+      ></ion-input>
+    </ion-item>
+  </div>
+
+  <div class="field field-active-row">
+    <div class="active-toggle-row">
+      <span>Activo</span>
+      <ion-toggle
+        [checked]="activeDraft"
+        [disabled]="isSaving || loading"
+        (ionChange)="onActiveChange($event)"
+      ></ion-toggle>
+    </div>
+  </div>
+
+  <div class="summary-actions">
+    <ion-button (click)="saveSummary()" [disabled]="isSaving || loading || !systemId">
+      {{ isSaving ? 'Guardando...' : 'Guardar cambios' }}
+    </ion-button>
+  </div>
+</div>
+
+<app-file-upload
+  type="image"
+  [isOpen]="isFileUploadOpen"
+  [image_max_dimension]="128"
+  (fileSelected)="onFileSelected($event)"
+  (close)="isFileUploadOpen = false"
+></app-file-upload>

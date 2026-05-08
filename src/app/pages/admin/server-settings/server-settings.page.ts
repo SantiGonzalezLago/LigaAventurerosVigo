@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { IonContent, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonButton, IonInput, IonItem } from '@ionic/angular/standalone';
 import { ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { checkmarkOutline } from 'ionicons/icons';
@@ -24,7 +24,7 @@ interface Setting {
 @Component({
   selector: 'app-server-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon, LoaderComponent, ErrorStateComponent],
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, IonButton, IonInput, IonItem, LoaderComponent, ErrorStateComponent],
   templateUrl: './server-settings.page.html',
   styleUrls: ['./server-settings.page.scss'],
 })

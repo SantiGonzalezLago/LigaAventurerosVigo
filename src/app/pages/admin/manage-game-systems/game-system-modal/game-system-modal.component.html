@@ -14,14 +14,15 @@
     <div class="modal-body">
       <div class="field">
         <label class="field-label">Nombre</label>
-        <input
-          class="field-input"
-          [class.field-input-error]="showErrors && !nameDraft.trim()"
-          type="text"
-          [(ngModel)]="nameDraft"
-          (ngModelChange)="onNameInput()"
-          aria-label="Nombre del sistema"
-        />
+        <ion-item>
+          <ion-input
+            type="text"
+            [(ngModel)]="nameDraft"
+            (ngModelChange)="onNameInput()"
+            [disabled]="isSaving"
+            aria-label="Nombre del sistema"
+          ></ion-input>
+        </ion-item>
         @if (showErrors && !nameDraft.trim()) {
           <span class="field-error">El nombre es obligatorio</span>
         }
@@ -29,14 +30,15 @@
 
       <div class="field">
         <label class="field-label">Slug</label>
-        <input
-          class="field-input"
-          [class.field-input-error]="showErrors && !slugDraft.trim()"
-          type="text"
-          [(ngModel)]="slugDraft"
-          (ngModelChange)="onSlugInput()"
-          aria-label="Slug del sistema"
-        />
+        <ion-item>
+          <ion-input
+            type="text"
+            [(ngModel)]="slugDraft"
+            (ngModelChange)="onSlugInput()"
+            [disabled]="isSaving"
+            aria-label="Slug del sistema"
+          ></ion-input>
+        </ion-item>
         @if (showErrors && !slugDraft.trim()) {
           <span class="field-error">El slug es obligatorio</span>
         }
@@ -50,22 +52,24 @@
           } @else {
             <div class="icon-placeholder">Sin icono</div>
           }
-          <button class="btn-upload" type="button" (click)="isFileUploadOpen = true">
+          <ion-button fill="outline" size="small" [disabled]="isSaving" (click)="isFileUploadOpen = true">
             {{ iconPreviewUrl ? 'Cambiar' : 'Seleccionar' }}
-          </button>
+          </ion-button>
         </div>
       </div>
 
       <div class="field">
         <label class="field-label">Límite de personajes por jugador</label>
-        <input
-          class="field-input"
-          type="number"
-          min="0"
-          step="1"
-          [(ngModel)]="pcLimitDraft"
-          aria-label="Límite de personajes por jugador"
-        />
+        <ion-item>
+          <ion-input
+            type="number"
+            min="0"
+            step="1"
+            [(ngModel)]="pcLimitDraft"
+            [disabled]="isSaving"
+            aria-label="Límite de personajes por jugador"
+          ></ion-input>
+        </ion-item>
       </div>
 
       <div class="field field-active-row">
@@ -80,14 +84,12 @@
       </div>
 
       <div class="modal-actions">
-        <button class="btn-cancel" type="button" [disabled]="isSaving" (click)="closeModal()">Cancelar</button>
-        <button class="btn-save" type="button" [disabled]="isSaving" (click)="save()">
-          @if (isSaving) {
-            <span class="spinner"></span>
-          } @else {
-            {{ isEditing ? 'Guardar cambios' : 'Crear sistema' }}
-          }
-        </button>
+        <ion-button fill="clear" [disabled]="isSaving" (click)="closeModal()">
+          Cancelar
+        </ion-button>
+        <ion-button [disabled]="isSaving" (click)="save()">
+          {{ isSaving ? 'Guardando...' : (isEditing ? 'Guardar cambios' : 'Crear sistema') }}
+        </ion-button>
       </div>
     </div>
   </ng-template>

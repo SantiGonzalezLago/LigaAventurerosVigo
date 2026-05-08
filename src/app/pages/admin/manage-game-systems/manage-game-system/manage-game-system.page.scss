@@ -1,0 +1,23 @@
+.manage-game-system-page {
+  .system-tabs-wrap {
+
+    .system-tabs-segment {
+      width: 100%;
+    }
+
+    ion-segment-button {
+      min-width: max-content;
+    }
+
+    ion-segment-button ion-label {
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+    }
+  }
+
+  .tab-content {
+    min-height: 320px;
+    padding: 12px;
+  }
+}

@@ -44,6 +44,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/admin/manage-game-systems/manage-game-systems.page').then((m) => m.ManageGameSystemsPage),
         canActivate: [AdminGuard],
       },
+      {
+        path: 'admin/game-systems/:slug',
+        loadComponent: () => import('./pages/admin/manage-game-systems/manage-game-system/manage-game-system.page').then((m) => m.ManageGameSystemPage),
+        canActivate: [AdminGuard],
+      },
       // Redirecciones
       {
         path: '',

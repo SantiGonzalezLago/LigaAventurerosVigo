@@ -30,18 +30,19 @@
               </td>
               <td class="value-cell">
                 <div class="value-wrapper">
-                  <input
-                    class="value-input"
-                    type="text"
-                    [(ngModel)]="drafts[setting.key]"
-                    [name]="setting.key"
-                    [attr.aria-label]="'Valor de ' + setting.key"
-                    (keydown.enter)="save(setting.key)"
-                  />
+                  <ion-item>
+                    <ion-input
+                      type="text"
+                      [(ngModel)]="drafts[setting.key]"
+                      [name]="setting.key"
+                      [attr.aria-label]="'Valor de ' + setting.key"
+                      (keydown.enter)="save(setting.key)"
+                    ></ion-input>
+                  </ion-item>
                   @if (isDirty(setting.key)) {
-                    <button
-                      class="save-button"
-                      [class.saving]="saving[setting.key]"
+                    <ion-button
+                      fill="clear"
+                      size="small"
                       [disabled]="saving[setting.key]"
                       (click)="save(setting.key)"
                       aria-label="Guardar"
@@ -51,7 +52,7 @@
                       } @else {
                         <ion-icon name="checkmark-outline"></ion-icon>
                       }
-                    </button>
+                    </ion-button>
                   }
                 </div>
               </td>

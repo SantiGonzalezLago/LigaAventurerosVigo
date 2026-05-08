@@ -16,7 +16,15 @@
         </div>
       }
       @for (system of systems; track system.id) {
-        <div class="system-row" [class.system-row-inactive]="!system.active">
+        <div
+          class="system-row"
+          [class.system-row-inactive]="!system.active"
+          role="button"
+          tabindex="0"
+          (click)="openSystemManagement(system)"
+          (keydown.enter)="openSystemManagement(system)"
+          (keydown.space)="$event.preventDefault(); openSystemManagement(system)"
+        >
           <div class="system-icon-wrap">
             @if (system.icon) {
               <img class="system-icon" [src]="system.icon" [alt]="system.name" />
@@ -33,7 +41,7 @@
               }
             </span>
           </div>
-          <button class="edit-btn" (click)="openEditSystemModal(system)" aria-label="Editar">
+          <button class="edit-btn" (click)="$event.stopPropagation(); openEditSystemModal(system)" aria-label="Editar">
             <ion-icon name="pencil-outline"></ion-icon>
           </button>
         </div>

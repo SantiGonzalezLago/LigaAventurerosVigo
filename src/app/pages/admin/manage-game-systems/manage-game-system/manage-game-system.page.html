@@ -1,0 +1,36 @@
+<ion-content class="page-content manage-game-system-page" fullscreen>
+  @if (loadingSystem || !system) {
+    <app-loader></app-loader>
+  } @else {
+    <div class="system-tabs-wrap">
+      <ion-segment class="system-tabs-segment" [value]="selectedTab" (ionChange)="onTabChange($event)" scrollable="true">
+        <ion-segment-button value="summary">
+          <ion-label>Resumen</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="settings">
+          <ion-label>Settings</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="tiers">
+          <ion-label>Tiers</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="species">
+          <ion-label>Especies</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="classes">
+          <ion-label>Clases</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <div class="tab-content">
+      @if (selectedTab === 'summary') {
+        <app-tab-summary
+          [slug]="systemSlug"
+          [system]="system"
+          [loading]="loadingSystem"
+          (slugUpdated)="onSystemSlugUpdated($event)"
+        ></app-tab-summary>
+      }
+    </div>
+  }
+</ion-content>

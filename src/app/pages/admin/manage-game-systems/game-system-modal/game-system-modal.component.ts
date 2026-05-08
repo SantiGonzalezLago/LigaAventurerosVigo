@@ -9,6 +9,8 @@ import {
   IonTitle,
   IonButtons,
   IonButton,
+  IonItem,
+  IonInput,
   IonIcon,
   IonToggle,
 } from '@ionic/angular/standalone';
@@ -34,6 +36,8 @@ addIcons({ closeOutline });
     IonTitle,
     IonButtons,
     IonButton,
+    IonItem,
+    IonInput,
     IonIcon,
     IonToggle,
     FileUploadComponent,
