@@ -31,6 +31,12 @@
           (slugUpdated)="onSystemSlugUpdated($event)"
         ></app-tab-summary>
       }
+      @if (selectedTab === 'settings') {
+        <app-tab-settings [systemId]="system.id"></app-tab-settings>
+      }
+      @if (selectedTab === 'tiers') {
+        <app-tab-tiers [systemId]="system.id"></app-tab-tiers>
+      }
     </div>
   }
 </ion-content>

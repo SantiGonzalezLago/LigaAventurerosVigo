@@ -14,7 +14,9 @@ import { AdminPageTemplate } from '../../../../templates/admin-page.template';
 import { ApiService } from '../../../../services/api.service';
 import { PageHeaderService } from '../../../../services/page-header.service';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
+import { TabSettingsComponent } from './tab-settings/tab-settings.component';
 import { TabSummaryComponent } from './tab-summary/tab-summary.component';
+import { TabTiersComponent } from './tab-tiers/tab-tiers.component';
 
 @Component({
   selector: 'app-manage-game-system',
@@ -26,7 +28,9 @@ import { TabSummaryComponent } from './tab-summary/tab-summary.component';
     IonSegmentButton,
     IonLabel,
     LoaderComponent,
+    TabSettingsComponent,
     TabSummaryComponent,
+    TabTiersComponent,
   ],
   templateUrl: './manage-game-system.page.html',
   styleUrls: ['./manage-game-system.page.scss'],

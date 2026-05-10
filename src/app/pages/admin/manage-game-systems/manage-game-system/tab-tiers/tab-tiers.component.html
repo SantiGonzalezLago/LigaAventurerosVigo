@@ -1,0 +1,187 @@
+<div class="tiers-content">
+
+  <!-- Header -->
+  <div class="tiers-header">
+    @if (editMode) {
+      <ion-button class="add-tier-header-btn" fill="outline" size="small" [disabled]="saving" (click)="addTier()">
+        + Añadir tier
+      </ion-button>
+      <ion-button
+        fill="outline"
+        size="small"
+        [disabled]="loading || saving"
+        (click)="toggleEditMode()"
+      >
+        Cancelar
+      </ion-button>
+      <ion-button
+        size="small"
+        [disabled]="saving || !!validationError"
+        (click)="saveTiers()"
+      >
+        {{ saving ? 'Guardando...' : 'Guardar' }}
+      </ion-button>
+    } @else {
+      <ion-button
+        fill="outline"
+        size="small"
+        [disabled]="loading || saving"
+        (click)="toggleEditMode()"
+      >
+        Editar
+      </ion-button>
+    }
+  </div>
+
+  @if (loading) {
+    <app-loader></app-loader>
+  } @else if (loadError) {
+    <p class="load-error">{{ loadError }}</p>
+  } @else {
+
+    <!-- Validation banner -->
+    @if (editMode && validationError) {
+      <div class="validation-banner">{{ validationError }}</div>
+    }
+
+    <!-- Ruler + Tiers grid -->
+    @if (activeDrafts.length > 0) {
+      <div class="ruler-grid" [style.grid-template-rows]="gridTemplateRows">
+        @for (level of levels; track level) {
+          <div class="level-mark" [style.grid-row]="level">{{ level }}</div>
+        }
+
+        @for (tier of activeDrafts; track trackTier(tier); let i = $index) {
+          <div
+            class="tier-block"
+            [class.edit-mode]="editMode"
+            [style.grid-row]="tierGridRow(tier)"
+            [style.background-color]="tierBgColor(i)"
+            [style.border-left-color]="tierBorderColor(i)"
+          >
+            @if (editMode) {
+              <div class="tier-block-edit">
+                <ion-item class="tier-name-item">
+                  <ion-input
+                    type="text"
+                    [(ngModel)]="tier.name"
+                    placeholder="Nombre del tier"
+                    aria-label="Nombre del tier"
+                  ></ion-input>
+                </ion-item>
+                <div class="tier-levels-row">
+                  <span class="level-row-label">Nivel</span>
+                  <input
+                    type="number"
+                    class="level-num-input"
+                    [ngModel]="getLevelDraftValue(tier, 'min_level')"
+                    (ngModelChange)="onLevelInputChange(tier, 'min_level', $event)"
+                    (blur)="onLevelInputBlur(tier)"
+                    min="1"
+                    step="1"
+                    aria-label="Nivel minimo"
+                  />
+                  <span class="level-sep">—</span>
+                  <input
+                    type="number"
+                    class="level-num-input"
+                    [ngModel]="getLevelDraftValue(tier, 'max_level')"
+                    (ngModelChange)="onLevelInputChange(tier, 'max_level', $event)"
+                    (blur)="onLevelInputBlur(tier)"
+                    min="1"
+                    step="1"
+                    aria-label="Nivel maximo"
+                  />
+                </div>
+                <div class="tier-actions">
+                  <ion-button size="small" fill="clear" color="medium" (click)="setTierActive(tier, false)">
+                    Desactivar
+                  </ion-button>
+                  <ion-button size="small" fill="clear" color="danger" (click)="removeTier(tier)">
+                    Eliminar
+                  </ion-button>
+                </div>
+              </div>
+            } @else {
+              <div class="tier-block-view">
+                <span class="tier-name">{{ tier.name || '(sin nombre)' }}</span>
+                <span class="tier-range">{{ tierLevelLabel(tier) }}</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="ruler-empty-hint">
+        No hay tiers activos
+      </div>
+    }
+
+    <!-- Inactive tiers -->
+    @if (inactiveDrafts.length > 0) {
+      <div class="inactive-section">
+        <div class="inactive-section-title">Tiers inactivos</div>
+        <div class="inactive-list">
+          @for (tier of inactiveDrafts; track trackTier(tier)) {
+            <div class="inactive-tier">
+              @if (editMode) {
+                <div class="inactive-tier-fields">
+                  <ion-item class="tier-name-item">
+                    <ion-input
+                      type="text"
+                      [(ngModel)]="tier.name"
+                      placeholder="Nombre del tier"
+                      aria-label="Nombre del tier"
+                    ></ion-input>
+                  </ion-item>
+                  <div class="tier-levels-row">
+                    <span class="level-row-label">Nivel</span>
+                    <input
+                      type="number"
+                      class="level-num-input"
+                      [ngModel]="getLevelDraftValue(tier, 'min_level')"
+                      (ngModelChange)="onLevelInputChange(tier, 'min_level', $event)"
+                      (blur)="onLevelInputBlur(tier)"
+                      min="1"
+                      step="1"
+                      aria-label="Nivel minimo"
+                    />
+                    <span class="level-sep">—</span>
+                    <input
+                      type="number"
+                      class="level-num-input"
+                      [ngModel]="getLevelDraftValue(tier, 'max_level')"
+                      (ngModelChange)="onLevelInputChange(tier, 'max_level', $event)"
+                      (blur)="onLevelInputBlur(tier)"
+                      min="1"
+                      step="1"
+                      aria-label="Nivel maximo"
+                    />
+                  </div>
+                </div>
+                <div class="inactive-tier-actions">
+                  <ion-button size="small" fill="outline" (click)="setTierActive(tier, true)">
+                    Activar
+                  </ion-button>
+                  <ion-button size="small" fill="clear" color="danger" (click)="removeTier(tier)">
+                    Eliminar
+                  </ion-button>
+                </div>
+              } @else {
+                <div class="inactive-tier-info">
+                  <span class="tier-name">{{ tier.name || '(sin nombre)' }}</span>
+                  <span class="tier-range">{{ tierLevelLabel(tier) }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Empty state -->
+    @if (!editMode && activeDrafts.length === 0 && inactiveDrafts.length === 0) {
+      <p class="empty-state">No hay tiers definidos. Pulsa <strong>Editar</strong> para añadir.</p>
+    }
+  }
+</div>

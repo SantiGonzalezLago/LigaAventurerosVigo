@@ -1,0 +1,266 @@
+.tiers-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Header ── */
+.tiers-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.add-tier-header-btn {
+  margin-right: auto;
+}
+
+/* ── Validation banner ── */
+.validation-banner {
+  background: rgba(var(--ion-color-danger-rgb), 0.08);
+  border: 1px solid var(--ion-color-danger);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: var(--ion-color-danger);
+}
+
+/* ── Ruler + Tiers grid ── */
+.ruler-container {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.ruler-grid {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 4px 8px;
+  align-items: stretch;
+}
+
+.level-mark {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-right: 2px solid var(--ion-color-light-shade);
+  padding-right: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--ion-color-medium);
+  user-select: none;
+  line-height: 1;
+  grid-column: 1;
+}
+
+/* ── Tier block ── */
+.tier-block {
+  grid-column: 2;
+  border-left: 4px solid;
+  border-radius: 8px;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+
+  &.edit-mode {
+    z-index: 2;
+    background-color: var(--ion-color-light) !important; // override inline color in edit mode
+    justify-content: flex-start;
+    padding: 8px 10px;
+    gap: 4px;
+  }
+}
+
+.tier-block-view {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tier-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tier-range {
+  font-size: 0.75rem;
+  color: var(--ion-color-medium);
+}
+
+/* ── Edit mode inner layout ── */
+.tier-block-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tier-name-item {
+  --min-height: 36px;
+  --padding-start: 6px;
+  --inner-padding-end: 4px;
+  --border-radius: 8px;
+  font-size: 0.88rem;
+}
+
+.tier-levels-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.level-row-label {
+  font-size: 0.75rem;
+  color: var(--ion-color-medium);
+  font-weight: 600;
+}
+
+.level-num-input {
+  width: 52px;
+  padding: 3px 6px;
+  font-size: 0.85rem;
+  text-align: center;
+  border: 1px solid rgba(var(--ion-color-medium-rgb), 0.4);
+  border-radius: 6px;
+  background: var(--ion-background-color, #fff);
+  color: var(--ion-color-dark);
+  outline: none;
+
+  &:focus {
+    border-color: var(--ion-color-primary);
+    box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.2);
+  }
+
+  /* hide spin buttons */
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.level-sep {
+  color: var(--ion-color-medium);
+  font-size: 0.85rem;
+}
+
+.tier-actions {
+  display: flex;
+  gap: 0;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+/* ── Add tier button ── */
+.add-tier-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: -4px;
+}
+
+/* ── Ruler empty hint ── */
+.ruler-empty-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ion-color-medium);
+  font-size: 0.85rem;
+  font-style: italic;
+  background: var(--ion-color-light);
+  border-radius: 10px;
+  min-height: 72px;
+  text-align: center;
+  padding: 12px;
+}
+
+/* ── Inactive section ── */
+.inactive-section {
+  border-top: 1px solid var(--ion-color-light-shade);
+  padding-top: 14px;
+}
+
+.inactive-section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ion-color-medium);
+  margin-bottom: 10px;
+}
+
+.inactive-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inactive-tier {
+  background: var(--ion-color-light);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.inactive-tier-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.inactive-tier-actions {
+  display: flex;
+  gap: 0;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.inactive-tier-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+
+  .tier-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ion-color-medium-shade);
+  }
+
+  .tier-range {
+    font-size: 0.8rem;
+    color: var(--ion-color-medium);
+  }
+}
+
+/* ── Load error / empty state ── */
+.load-error {
+  color: var(--ion-color-danger);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 24px 0;
+}
+
+.empty-state {
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 32px 0;
+}
