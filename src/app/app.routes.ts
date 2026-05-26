@@ -45,6 +45,11 @@ export const routes: Routes = [
         canActivate: [AdminGuard],
       },
       {
+        path: 'admin/game-types',
+        loadComponent: () => import('./pages/admin/manage-game-types/manage-game-types.page').then((m) => m.ManageGameTypesPage),
+        canActivate: [AdminGuard],
+      },
+      {
         path: 'admin/game-systems/:slug',
         loadComponent: () => import('./pages/admin/manage-game-systems/manage-game-system/manage-game-system.page').then((m) => m.ManageGameSystemPage),
         canActivate: [AdminGuard],

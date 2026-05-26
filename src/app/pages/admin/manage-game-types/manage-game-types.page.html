@@ -1,0 +1,81 @@
+<ion-content class="page-content manage-game-types-page" fullscreen>
+  <div class="settings-content">
+    @if (loading) {
+      <app-loader></app-loader>
+    }
+
+    @if (loadError && !loading && gameTypes.length === 0) {
+      <app-error-state [message]="loadError" (retry)="reloadGameTypes()"></app-error-state>
+    }
+
+    @if (!loading && gameTypes.length > 0) {
+      <div class="table-wrapper">
+        <table class="settings-table">
+          <thead>
+            <tr>
+              <th class="name-col">Nombre</th>
+              <th class="active-col">Estado</th>
+              <th class="options-col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (gameType of gameTypes; track gameType.id) {
+              <tr class="setting-row">
+                <td class="name-cell">
+                  <strong>{{ gameType.name }}</strong>
+                </td>
+                <td class="active-cell">
+                  <span class="setting-status" [class.inactive]="!gameType.active">
+                    {{ gameType.active ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td class="options-cell">
+                  <ion-button
+                    class="option-btn"
+                    fill="clear"
+                    aria-label="Editar tipo de partida"
+                    (click)="openEditModal(gameType); $event.stopPropagation()"
+                  >
+                    <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button
+                    class="option-btn"
+                    fill="clear"
+                    color="danger"
+                    aria-label="Eliminar tipo de partida"
+                    (click)="requestDeleteGameType(gameType); $event.stopPropagation()"
+                  >
+                    <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                  </ion-button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @if (!loading && !loadError && gameTypes.length === 0) {
+      <div class="empty-container">
+        <h3>Sin tipos de partida</h3>
+        <p>No hay tipos de partida disponibles.</p>
+      </div>
+    }
+
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="settings-fab settings-fab-add">
+      <ion-fab-button [disabled]="loading" (click)="openCreateModal()" aria-label="Añadir tipo de partida">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+</ion-content>
+
+<app-game-type-modal
+  [isOpen]="isGameTypeModalOpen"
+  [mode]="gameTypeModalMode"
+  [seed]="gameTypeModalSeed"
+  [isSaving]="saving"
+  [isDeleting]="deleting"
+  (close)="closeModal()"
+  (submitDraft)="saveModal($event)"
+></app-game-type-modal>
