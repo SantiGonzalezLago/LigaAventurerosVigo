@@ -21,3 +21,11 @@
     padding: 12px;
   }
 }
+
+@media (max-width: 768px) {
+  .manage-game-system-page {
+    .tab-content {
+      padding: 8px;
+    }
+  }
+}

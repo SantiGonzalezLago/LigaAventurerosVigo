@@ -1,0 +1,51 @@
+<ion-modal class="entity-modal" [isOpen]="isOpen" (didDismiss)="onDidDismiss()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{ mode === 'create' ? 'Añadir especie' : 'Editar especie' }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button class="round-button" fill="clear" aria-label="Cerrar" [disabled]="isSaving || isDeleting" (click)="onClose()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">Nombre</label>
+        <ion-item>
+          <ion-input
+            type="text"
+            [(ngModel)]="draft.name"
+            [disabled]="isSaving || isDeleting"
+            aria-label="Nombre de la especie"
+          ></ion-input>
+        </ion-item>
+        @if (showErrors && !draft.name.trim()) {
+          <span class="field-error">El nombre es obligatorio</span>
+        }
+      </div>
+
+      <div class="field field-active-row">
+        <div class="active-toggle-row">
+          <span>Activo</span>
+          <ion-toggle
+            [checked]="draft.active"
+            (ionChange)="onActiveChange($event)"
+            [disabled]="isSaving || isDeleting"
+          ></ion-toggle>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <ion-button fill="clear" [disabled]="isSaving || isDeleting" (click)="onClose()">
+          Cancelar
+        </ion-button>
+        <ion-button [disabled]="isSaving || isDeleting" (click)="onSubmit()">
+          {{ isSaving ? 'Guardando...' : (mode === 'create' ? 'Añadir' : 'Guardar cambios') }}
+        </ion-button>
+      </div>
+    </div>
+  </ng-template>
+</ion-modal>

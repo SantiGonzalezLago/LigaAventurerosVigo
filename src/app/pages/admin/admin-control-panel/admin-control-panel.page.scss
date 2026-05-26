@@ -1,15 +1,35 @@
 .actions-wrapper {
 	min-height: 100%;
 	display: flex;
-	align-items: flex-start;
-	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 16px;
 }
 
-.actions {
+.section {
 	width: min(420px, 100%);
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	padding-bottom: 12px;
+	margin-bottom: 10px;
+}
+
+.section-title {
+	margin: 0 0 6px 0;
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: var(--ion-color-medium-shade);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	text-align: center;
+}
+
+.actions {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 }
 
 .action-button {
@@ -22,6 +42,10 @@
 	font-size: 1rem;
 	font-weight: 600;
 	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
 }
 
 .action-button:focus-visible {
@@ -31,13 +55,6 @@
 
 .action-button:hover {
 	filter: brightness(1.05);
-}
-
-.action-button {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 10px;
 }
 
 .action-button-badges {

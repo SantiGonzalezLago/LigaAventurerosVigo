@@ -46,7 +46,7 @@
 
     .name-col,
     .name-cell {
-      min-width: 160px;
+      min-width: 220px;
     }
 
     .name-cell {
@@ -55,24 +55,10 @@
       }
     }
 
-    .name-slug {
-      display: block;
-      margin-top: 2px;
-      font-size: 0.82rem;
-      color: var(--ion-color-medium-shade);
-      word-break: break-word;
-    }
-
     .active-col,
     .active-cell {
-      width: 110px;
-    }
-
-    .description-col,
-    .description-cell {
-      min-width: 180px;
-      color: var(--ion-color-medium-shade);
-      word-break: break-word;
+      width: 120px;
+      min-width: 120px;
     }
 
     .options-col,
@@ -157,17 +143,7 @@
 
       .name-col,
       .name-cell {
-        width: auto;
         min-width: 0;
-      }
-
-      .name-slug {
-        font-size: 0.75rem;
-      }
-
-      .description-col,
-      .description-cell {
-        display: none;
       }
 
       .active-col,
@@ -188,6 +164,5 @@
         min-height: 36px;
       }
     }
-
   }
 }

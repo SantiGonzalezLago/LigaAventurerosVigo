@@ -17,6 +17,8 @@ import { LoaderComponent } from '../../../../components/loader/loader.component'
 import { TabSettingsComponent } from './tab-settings/tab-settings.component';
 import { TabSummaryComponent } from './tab-summary/tab-summary.component';
 import { TabTiersComponent } from './tab-tiers/tab-tiers.component';
+import { TabSpeciesComponent } from './tab-species/tab-species.component';
+import { TabClassesComponent } from './tab-classes/tab-classes.component';
 
 @Component({
   selector: 'app-manage-game-system',
@@ -31,6 +33,8 @@ import { TabTiersComponent } from './tab-tiers/tab-tiers.component';
     TabSettingsComponent,
     TabSummaryComponent,
     TabTiersComponent,
+    TabSpeciesComponent,
+    TabClassesComponent,
   ],
   templateUrl: './manage-game-system.page.html',
   styleUrls: ['./manage-game-system.page.scss'],

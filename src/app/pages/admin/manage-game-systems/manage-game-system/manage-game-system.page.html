@@ -37,6 +37,12 @@
       @if (selectedTab === 'tiers') {
         <app-tab-tiers [systemId]="system.id"></app-tab-tiers>
       }
+      @if (selectedTab === 'species') {
+        <app-tab-species [systemId]="system.id"></app-tab-species>
+      }
+      @if (selectedTab === 'classes') {
+        <app-tab-classes [systemId]="system.id"></app-tab-classes>
+      }
     </div>
   }
 </ion-content>

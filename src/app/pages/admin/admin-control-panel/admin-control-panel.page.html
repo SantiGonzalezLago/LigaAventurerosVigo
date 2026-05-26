@@ -1,58 +1,72 @@
 <ion-content class="page-content" fullscreen>
   <div class="actions-wrapper">
-    <div class="actions" role="list" aria-label="Opciones de administracion">
+    <!-- Configuraciones Generales -->
+    <div class="section">
+      <h2 class="section-title">Configuraciones Generales</h2>
+      <div class="actions" role="list" aria-label="Configuraciones generales">
+        <button
+          type="button"
+          role="listitem"
+          class="action-button"
+          routerLink="/admin/users"
+          routerDirection="forward"
+        >
+          <span class="action-button-label">Gestion de usuarios</span>
+          <span class="action-button-badges">
+            <span class="badge badge-success">{{ users.confirmed }}</span>
+            <span class="badge badge-warning">{{ users.unconfirmed }}</span>
+            <span class="badge badge-danger">{{ users.banned }}</span>
+          </span>
+        </button>
 
-      <button
-        type="button"
-        role="listitem"
-        class="action-button"
-        routerLink="/admin/users"
-        routerDirection="forward"
-      >
-        <span class="action-button-label">Gestion de usuarios</span>
-        <span class="action-button-badges">
-          <span class="badge badge-success">{{ users.confirmed }}</span>
-          <span class="badge badge-warning">{{ users.unconfirmed }}</span>
-          <span class="badge badge-danger">{{ users.banned }}</span>
-        </span>
-      </button>
+        <button
+          type="button"
+          role="listitem"
+          class="action-button"
+          routerLink="/admin/server-settings"
+          routerDirection="forward"
+        >
+          <span class="action-button-label">Configuraciones del servidor</span>
+        </button>
+      </div>
+    </div>
 
-      <button
-        type="button"
-        role="listitem"
-        class="action-button"
-        routerLink="/admin/server-settings"
-        routerDirection="forward"
-      >
-        <span class="action-button-label">Configuraciones del servidor</span>
-      </button>
+    <!-- Configuraciones de Juego -->
+    <div class="section">
+      <h2 class="section-title">Configuraciones de Juego</h2>
+      <div class="actions" role="list" aria-label="Configuraciones de juego">
+        <button
+          type="button"
+          role="listitem"
+          class="action-button"
+          routerLink="/admin/game-systems"
+          routerDirection="forward"
+        >
+          <span class="action-button-label">Sistemas de juego</span>
+        </button>
+      </div>
+    </div>
 
-      <button
-        type="button"
-        role="listitem"
-        class="action-button"
-        routerLink="/admin/game-systems"
-        routerDirection="forward"
-      >
-        <span class="action-button-label">Configurar sistemas</span>
-      </button>
-
-      <button
-        type="button"
-        role="listitem"
-        class="action-button"
-        routerLink="/admin/upload-files-log"
-        routerDirection="forward"
-      >
-        <span class="action-button-label">Log de subidas de ficheros</span>
-        <span class="action-button-badges">
-          <span class="badge badge-neutral">{{ files.total }}</span>
-          @if (files.new > 0) {
-            <span class="badge badge-warning">{{ files.new }}</span>
-          }
-        </span>
-      </button>
-
+    <!-- Logs -->
+    <div class="section">
+      <h2 class="section-title">Logs del servidor</h2>
+      <div class="actions" role="list" aria-label="Logs">
+        <button
+          type="button"
+          role="listitem"
+          class="action-button"
+          routerLink="/admin/upload-files-log"
+          routerDirection="forward"
+        >
+          <span class="action-button-label">Subidas de ficheros</span>
+          <span class="action-button-badges">
+            <span class="badge badge-neutral">{{ files.total }}</span>
+            @if (files.new > 0) {
+              <span class="badge badge-warning">{{ files.new }}</span>
+            }
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </ion-content>

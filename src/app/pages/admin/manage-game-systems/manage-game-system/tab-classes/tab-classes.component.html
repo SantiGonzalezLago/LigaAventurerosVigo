@@ -3,40 +3,37 @@
     <app-loader></app-loader>
   }
 
-  @if (loadError && !loading && settings.length === 0) {
-    <app-error-state [message]="loadError" (retry)="reloadSettings()"></app-error-state>
+  @if (loadError && !loading && classes.length === 0) {
+    <app-error-state [message]="loadError" (retry)="reloadClasses()"></app-error-state>
   }
 
-  @if (!loading && settings.length > 0) {
+  @if (!loading && classes.length > 0) {
     <div class="table-wrapper">
       <table class="settings-table">
         <thead>
           <tr>
             <th class="name-col">Nombre</th>
-            <th class="description-col">Descripción</th>
             <th class="active-col">Estado</th>
             <th class="options-col"></th>
           </tr>
         </thead>
         <tbody>
-          @for (setting of settings; track setting.id) {
+          @for (gameClass of classes; track gameClass.id) {
             <tr class="setting-row">
               <td class="name-cell">
-                <strong>{{ setting.name }}</strong>
-                <span class="name-slug">{{ setting.slug }}</span>
+                <strong>{{ gameClass.name }}</strong>
               </td>
-              <td class="description-cell">{{ setting.description || '-' }}</td>
               <td class="active-cell">
-                <span class="setting-status" [class.inactive]="!setting.active">
-                  {{ setting.active ? 'Activo' : 'Inactivo' }}
+                <span class="setting-status" [class.inactive]="!gameClass.active">
+                  {{ gameClass.active ? 'Activo' : 'Inactivo' }}
                 </span>
               </td>
               <td class="options-cell">
                 <ion-button
                   class="option-btn"
                   fill="clear"
-                  aria-label="Editar setting"
-                  (click)="openEditModal(setting); $event.stopPropagation()"
+                  aria-label="Editar clase"
+                  (click)="openEditModal(gameClass); $event.stopPropagation()"
                 >
                   <ion-icon slot="icon-only" name="create-outline"></ion-icon>
                 </ion-button>
@@ -44,8 +41,8 @@
                   class="option-btn"
                   fill="clear"
                   color="danger"
-                  aria-label="Eliminar setting"
-                  (click)="requestDeleteSetting(setting); $event.stopPropagation()"
+                  aria-label="Eliminar clase"
+                  (click)="requestDeleteClass(gameClass); $event.stopPropagation()"
                 >
                   <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
                 </ion-button>
@@ -57,26 +54,26 @@
     </div>
   }
 
-  @if (!loading && !loadError && settings.length === 0) {
+  @if (!loading && !loadError && classes.length === 0) {
     <div class="empty-container">
-      <h3>Sin settings</h3>
-      <p>No hay settings disponibles para este sistema.</p>
+      <h3>Sin clases</h3>
+      <p>No hay clases disponibles para este sistema.</p>
     </div>
   }
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="settings-fab settings-fab-add">
-    <ion-fab-button [disabled]="loading" (click)="openCreateModal()" aria-label="Añadir setting">
+    <ion-fab-button [disabled]="loading" (click)="openCreateModal()" aria-label="Añadir clase">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </div>
 
-<app-setting-modal
-  [isOpen]="isSettingModalOpen"
-  [mode]="settingModalMode"
-  [seed]="settingModalSeed"
+<app-class-modal
+  [isOpen]="isClassModalOpen"
+  [mode]="classModalMode"
+  [seed]="classModalSeed"
   [isSaving]="saving"
   [isDeleting]="deleting"
   (close)="closeModal()"
   (submitDraft)="saveModal($event)"
-></app-setting-modal>
+></app-class-modal>
