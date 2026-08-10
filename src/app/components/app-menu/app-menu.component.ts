@@ -49,6 +49,7 @@ export class AppMenuComponent implements OnInit {
   private apiService = inject(ApiService);
   @Input() loginModalOpener: (() => void) | null = null;
   @Input() settingsModalOpener: (() => void) | null = null;
+  @Input() whatsappQrModalOpener: ((link: string) => void) | null = null;
 
   currentTheme: ThemeMode = 'system';
   themeOptions: { value: ThemeMode; label: string }[] = [];
@@ -132,6 +133,12 @@ export class AppMenuComponent implements OnInit {
 
   public openSettingsModal(): void {
     this.settingsModalOpener?.();
+  }
+
+  public openWhatsappQrModal(): void {
+    if (this.whatsappLink) {
+      this.whatsappQrModalOpener?.(this.whatsappLink);
+    }
   }
 
   private getThemeButtonClasses(themeValue: ThemeMode, isActive: boolean): string {

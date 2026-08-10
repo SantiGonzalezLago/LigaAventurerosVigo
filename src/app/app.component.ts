@@ -10,6 +10,7 @@ import {
 import { AppMenuComponent } from './components/app-menu/app-menu.component';
 import { LoginModalComponent } from './components/login-modal/login-modal.component';
 import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
+import { WhatsappQrModalComponent } from './components/whatsapp-qr-modal/whatsapp-qr-modal.component';
 import { SplashScreenComponent } from './components/splash-screen/splash-screen.component';
 import { ThemeService } from './services/theme.service';
 
@@ -30,6 +31,7 @@ interface LoginModalRequester {
     AppMenuComponent,
     LoginModalComponent,
     SettingsModalComponent,
+    WhatsappQrModalComponent,
     SplashScreenComponent,
   ],
 })
@@ -38,8 +40,11 @@ export class AppComponent {
   public showSplash = true;
   public isLoginModalOpen = false;
   public isSettingsModalOpen = false;
+  public isWhatsappQrModalOpen = false;
+  public whatsappLink: string = '';
   public readonly loginModalOpener = () => this.openLoginModal();
   public readonly settingsModalOpener = () => this.openSettingsModal();
+  public readonly whatsappQrModalOpener = (link: string) => this.openWhatsappQrModal(link);
 
   constructor() {
     void this.themeService;
@@ -59,6 +64,17 @@ export class AppComponent {
 
   public closeSettingsModal(): void {
     this.isSettingsModalOpen = false;
+  }
+
+  public openWhatsappQrModal(whatsappLink?: string): void {
+    if (whatsappLink) {
+      this.whatsappLink = whatsappLink;
+    }
+    this.isWhatsappQrModalOpen = true;
+  }
+
+  public closeWhatsappQrModal(): void {
+    this.isWhatsappQrModalOpen = false;
   }
 
   public onSplashDismissed(): void {

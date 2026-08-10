@@ -1,0 +1,23 @@
+<ion-modal class="whatsapp-qr-modal" [isOpen]="isOpen" (didDismiss)="onDidDismiss()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>WhatsApp</ion-title>
+        <ion-buttons slot="end">
+          <ion-button class="round-button" fill="clear" aria-label="Cerrar" (click)="closeModal()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <div class="modal-body ion-padding">
+      <p class="qr-label">Escanea el código QR</p>
+      <img [src]="getWhatsappQrUrl()" alt="WhatsApp QR" class="qr-image" />
+      <p class="qr-or">O abre directamente:</p>
+      <a [href]="whatsappLink" target="_blank" rel="noopener noreferrer" class="whatsapp-link">
+        Abrir WhatsApp
+      </a>
+    </div>
+  </ng-template>
+</ion-modal>

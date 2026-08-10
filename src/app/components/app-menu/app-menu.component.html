@@ -182,16 +182,15 @@
         }
 
         @if (whatsappLink) {
-          <a
+          <button
+            type="button"
             class="menu-footer-social-link"
-            [href]="whatsappLink"
-            target="_blank"
-            rel="noopener noreferrer"
+            (click)="openWhatsappQrModal()"
             aria-label="WhatsApp"
             title="WhatsApp"
           >
             <ion-icon name="logo-whatsapp" aria-hidden="true"></ion-icon>
-          </a>
+          </button>
         }
       </span>
     }
