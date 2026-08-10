@@ -12,6 +12,14 @@ export const routes: Routes = [
         path: 'home',
         loadComponent: () => import('./pages/home/home.page').then((m) => m.HomePage),
       },
+      {
+        path: 'profile',
+        loadComponent: () => import('./pages/users/profile/profile.page').then((m) => m.ProfilePage),
+      },
+      {
+        path: 'profile/:uid',
+        loadComponent: () => import('./pages/users/profile/profile.page').then((m) => m.ProfilePage),
+      },
       // Rutas protegidas para master
       {
         path: 'master',

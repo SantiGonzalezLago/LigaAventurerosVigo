@@ -2,6 +2,10 @@
   @if (showSplash) {
     <app-splash-screen (dismissed)="onSplashDismissed()"></app-splash-screen>
   }
+  <ion-toast [isOpen]="false"></ion-toast>
+  <ion-action-sheet [isOpen]="false"></ion-action-sheet>
+  <ion-alert [isOpen]="false"></ion-alert>
+  <ion-popover [isOpen]="false"></ion-popover>
   <app-menu [loginModalOpener]="loginModalOpener" [settingsModalOpener]="settingsModalOpener"></app-menu>
   <ion-router-outlet id="main-content" (activate)="onRouteActivate($event)"></ion-router-outlet>
   <app-login-modal [isOpen]="isLoginModalOpen" (close)="closeLoginModal()"></app-login-modal>

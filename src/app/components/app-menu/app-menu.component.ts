@@ -72,12 +72,12 @@ export class AppMenuComponent implements OnInit {
   }
 
   private loadSocialLinks(): void {
-    this.apiService.get<{ message: string; social_links?: { instagram?: string; whatsapp?: string; kofi?: string } }>('social-links')
+    this.apiService.get<{ message: string; social_links?: { social_link_instagram?: string; social_link_whatsapp?: string; social_link_kofi?: string } }>('social-links')
       .subscribe({
         next: (response) => {
-          this.kofiLink = response.social_links?.kofi ?? null;
-          this.instagramLink = response.social_links?.instagram ?? null;
-          this.whatsappLink = response.social_links?.whatsapp ?? null;
+          this.kofiLink = response.social_links?.social_link_kofi ?? null;
+          this.instagramLink = response.social_links?.social_link_instagram ?? null;
+          this.whatsappLink = response.social_links?.social_link_whatsapp ?? null;
         },
         error: () => {
           this.kofiLink = null;

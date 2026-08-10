@@ -34,7 +34,7 @@
     }
 
     @if (isLoggedIn()) {
-      <ion-tab-button tab="user" href="/user">
+      <ion-tab-button tab="profile" href="/profile">
         @if (getActiveUserAvatar(); as userAvatar) {
           <span class="profile-tab-avatar" aria-hidden="true">
             <img [src]="userAvatar" alt="" />

@@ -90,6 +90,7 @@ export class SettingsModalComponent implements OnChanges {
   }
 
   public onAvatarUploadError(message: string): void {
+    if (!message || message.trim() === '') return;
     void this.showErrorToast(message);
   }
 

@@ -1,5 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import {
+  IonActionSheet,
+  IonAlert,
+  IonApp,
+  IonPopover,
+  IonRouterOutlet,
+  IonToast,
+} from '@ionic/angular/standalone';
 import { AppMenuComponent } from './components/app-menu/app-menu.component';
 import { LoginModalComponent } from './components/login-modal/login-modal.component';
 import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
@@ -13,7 +20,18 @@ interface LoginModalRequester {
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  imports: [IonApp, IonRouterOutlet, AppMenuComponent, LoginModalComponent, SettingsModalComponent, SplashScreenComponent],
+  imports: [
+    IonActionSheet,
+    IonAlert,
+    IonApp,
+    IonPopover,
+    IonRouterOutlet,
+    IonToast,
+    AppMenuComponent,
+    LoginModalComponent,
+    SettingsModalComponent,
+    SplashScreenComponent,
+  ],
 })
 export class AppComponent {
   private themeService = inject(ThemeService);
